@@ -15,20 +15,7 @@ function Home(props) {
 	const currentTimestamp = Date.now();
 	const [posts, setPosts] = useState(null);
 
-	useEffect(() => {
-		const dbRef = RefTools.getUserHomePostsRef(user);
 	
-		const ref = getDatabase()
-		  .ref(dbRef)
-		  .orderByChild('reversedDateCreated')
-		  .limitToFirst(300);
-		ref.on('value', (snapshot) => {
-		  let val = snapshot.val();
-		 console.log("Dababase data", val);
-		});
-	
-		return () => ref.off();
-	  }, []);
 
 	const getMyPosts = async () => {
 		const myPosts = await getUserHomePosts(props.firebaseUser.uid);
