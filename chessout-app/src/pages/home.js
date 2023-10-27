@@ -9,6 +9,7 @@ import ClubImage from 'assets/images/default_chess_club.jpg';
 import MenuItem from "@mui/material/MenuItem";
 import * as RefTools from "utils/refTools";
 import {get, getDatabase, push, set} from "firebase/database";
+import PostsComponent from "./PostsComponent";
 
 function Home(props) {
 	const storage = getStorage(firebaseApp);
@@ -197,89 +198,96 @@ function Home(props) {
 		}
 	}, [props.firebaseUser]);
 
-
 	return (
 		<Container className="mt-2 mb-5">
-			<Row>
-				<Col xs={12} lg={{ offset: 3, span: 6 }}>
-					{posts && posts.length > 0? (
-						<Row>
-							{posts.map((post) => (
-								<React.Fragment key={post.postId}>
-									{post.postType === "USER_POST" && (
-										<Col xs={12} className="mt-4">
-											<UserPost
-												image={post.img_src}
-												title={post.message}
-												user={post.userName}
-												time={post.time}
-												avatar={post.userPictureUrl}
-												likesCount={post.likesCount}
-												likes={post.likes}
-												isLikedByCurrentUser={post.isLikedByCurrentUser}
-												commentsCount={post.commentsCount}
-												comments={post.comments}
-											/>
-										</Col>
-									)}
-									{post.postType === "TOURNAMENT_CREATED" && (
-										<Col xs={12} className="mt-4">
-											<TournamentPost
-												image={post.img_src}
-												title={"New tournament created"}
-												user={post.clubName}
-												time={post.time}
-												avatar={post.clubImage}
-												likesCount={post.likesCount}
-												likes={post.likes}
-												isLikedByCurrentUser={post.isLikedByCurrentUser}
-												commentsCount={post.commentsCount}
-												comments={post.comments}
-												tName={post.tournamentCreation.name}
-												tLocation={post.tournamentCreation.location}
-												tPlayersCount={post.tournamentCreation.playersCount}
-												isPairingsType={false}
-												tournamentId={post.tournamentId}
-												goToLabel="View Tournament"
-												goToLink={`/tournament-players/${post.tournamentId}`}
-											/>
-										</Col>
-									)}
-									{post.postType === "TOURNAMENT_PAIRINGS_AVAILABLE" && (
-										<Col xs={12} className="mt-4">
-											<TournamentPost
-												image={post.img_src}
-												title={`Round ${post.roundId} pairings available`}
-												user={post.clubName}
-												time={post.time}
-												avatar={post.clubImage}
-												likesCount={post.likesCount}
-												likes={post.likes}
-												isLikedByCurrentUser={post.isLikedByCurrentUser}
-												commentsCount={post.commentsCount}
-												comments={post.comments}
-												tName={post.tournamentCreation.name}
-												tLocation={post.tournamentCreation.location}
-												tPlayersCount={post.tournamentCreation.playersCount}
-												isPairingsType={true}
-												completedGames={post.tournamentPairings?.completedGames}
-												totalGames={post.tournamentPairings?.totalGames}
-												roundId={post.roundId}
-												goToLabel="View Pairings"
-												goToLink={`/tournament-rounds/${post.tournamentId}/${post.roundId - 1}`}
-											/>
-										</Col>
-									)}
-								</React.Fragment>
-							))}
-						</Row>
-					) : (
-						<div className="text-center align-content-center b-r-sm mt-5" style={{backgroundColor: "#2f2f2f", paddingTop: '25px', paddingBottom: '10px'}}><p>No posts available.</p></div>
-					)}
-				</Col>
-			</Row>
-		</Container>
-	);
+			{props.firebaseUser ? (
+				<PostsComponent />
+			) : (<div className="text-center align-content-center b-r-sm mt-5" style={{backgroundColor: "#2f2f2f", paddingTop: '25px', paddingBottom: '10px'}}><p>Please login</p></div>)}
+			</Container>
+	)
+
+	// return (
+	// 	<Container className="mt-2 mb-5">
+	// 		<Row>
+	// 			<Col xs={12} lg={{ offset: 3, span: 6 }}>
+	// 				{posts && posts.length > 0? (
+	// 					<Row>
+	// 						{posts.map((post) => (
+	// 							<React.Fragment key={post.postId}>
+	// 								{post.postType === "USER_POST" && (
+	// 									<Col xs={12} className="mt-4">
+	// 										<UserPost
+	// 											image={post.img_src}
+	// 											title={post.message}
+	// 											user={post.userName}
+	// 											time={post.time}
+	// 											avatar={post.userPictureUrl}
+	// 											likesCount={post.likesCount}
+	// 											likes={post.likes}
+	// 											isLikedByCurrentUser={post.isLikedByCurrentUser}
+	// 											commentsCount={post.commentsCount}
+	// 											comments={post.comments}
+	// 										/>
+	// 									</Col>
+	// 								)}
+	// 								{post.postType === "TOURNAMENT_CREATED" && (
+	// 									<Col xs={12} className="mt-4">
+	// 										<TournamentPost
+	// 											image={post.img_src}
+	// 											title={"New tournament created"}
+	// 											user={post.clubName}
+	// 											time={post.time}
+	// 											avatar={post.clubImage}
+	// 											likesCount={post.likesCount}
+	// 											likes={post.likes}
+	// 											isLikedByCurrentUser={post.isLikedByCurrentUser}
+	// 											commentsCount={post.commentsCount}
+	// 											comments={post.comments}
+	// 											tName={post.tournamentCreation.name}
+	// 											tLocation={post.tournamentCreation.location}
+	// 											tPlayersCount={post.tournamentCreation.playersCount}
+	// 											isPairingsType={false}
+	// 											tournamentId={post.tournamentId}
+	// 											goToLabel="View Tournament"
+	// 											goToLink={`/tournament-players/${post.tournamentId}`}
+	// 										/>
+	// 									</Col>
+	// 								)}
+	// 								{post.postType === "TOURNAMENT_PAIRINGS_AVAILABLE" && (
+	// 									<Col xs={12} className="mt-4">
+	// 										<TournamentPost
+	// 											image={post.img_src}
+	// 											title={`Round ${post.roundId} pairings available`}
+	// 											user={post.clubName}
+	// 											time={post.time}
+	// 											avatar={post.clubImage}
+	// 											likesCount={post.likesCount}
+	// 											likes={post.likes}
+	// 											isLikedByCurrentUser={post.isLikedByCurrentUser}
+	// 											commentsCount={post.commentsCount}
+	// 											comments={post.comments}
+	// 											tName={post.tournamentCreation.name}
+	// 											tLocation={post.tournamentCreation.location}
+	// 											tPlayersCount={post.tournamentCreation.playersCount}
+	// 											isPairingsType={true}
+	// 											completedGames={post.tournamentPairings?.completedGames}
+	// 											totalGames={post.tournamentPairings?.totalGames}
+	// 											roundId={post.roundId}
+	// 											goToLabel="View Pairings"
+	// 											goToLink={`/tournament-rounds/${post.tournamentId}/${post.roundId - 1}`}
+	// 										/>
+	// 									</Col>
+	// 								)}
+	// 							</React.Fragment>
+	// 						))}
+	// 					</Row>
+	// 				) : (
+	// 					<div className="text-center align-content-center b-r-sm mt-5" style={{backgroundColor: "#2f2f2f", paddingTop: '25px', paddingBottom: '10px'}}><p>No posts available.</p></div>
+	// 				)}
+	// 			</Col>
+	// 		</Row>
+	// 	</Container>
+	// );
 }
 
 export default Home;

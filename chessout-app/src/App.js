@@ -29,7 +29,7 @@ import { networkConfig } from "config/networks";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {firebaseApp} from "./config/firebase";
 import {readMyDefaultClub} from "utils/firebaseTools";
-import LoginPlaceholder from 'pages/LoginPlaceholder';
+import PostsComponent from 'pages/PostsComponent';
 
 const lightTheme = createTheme();
 const darkTheme = createTheme({
@@ -82,10 +82,10 @@ function App() {
         <Router>
           <CustomNavbar theme={theme} handleThemeChange={handleThemeChange} isMobile={isMobile} firebaseUser={firebaseUser ? firebaseUser: null}/>
           <Routes>
-            <Route path="/" element={<LoginPlaceholder firebaseUser={firebaseUser} />} />
+            <Route path="/" element={<Home firebaseUser={firebaseUser} />} />
             <Route path="/about-us" element={<About />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/home" element={<LoginPlaceholder firebaseUser={firebaseUser} />} />
+            <Route path="/home" element={<Home firebaseUser={firebaseUser} />} />
             <Route path="/followed-players" element={<FollowedPlayers />} />
             <Route path="/my-club" element={<MyClub />} />
             <Route path="/my-clubs" element={<MyClubs firebaseUser={firebaseUser} />} />
