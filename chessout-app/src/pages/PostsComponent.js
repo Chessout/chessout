@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {firebaseApp, database} from "../config/firebase";
 import { Container, Row, Col } from "react-bootstrap";
-import {get, getDatabase, ref, push, set, onValue} from "firebase/database";
+import {get, getDatabase, ref, push, set, onValue, query, orderByChild, limitToLast} from "firebase/database";
 import * as RefTools from "../utils/refTools";
 
 
@@ -11,7 +11,8 @@ const PostsComponent = (props) => {
   const dbRef = RefTools.getUserHomePostsRef(props.firebaseUser);
   
   const postsRef = ref(database, dbRef);
-  onValue(postsRef, (snapshot) => {
+  const last300Posts = query(postsRef, limitToLast(5), orderByChild('reversedDateCreated'));
+  onValue(last300Posts, (snapshot) => {
     const data = snapshot.val();
     console.log(data);
   });
