@@ -203,7 +203,7 @@ function Home(props) {
 	return (
 		<Container className="mt-2 mb-5">
 			{props.firebaseUser ? (
-				<PostsComponent userId={props.firebaseUser.uid} />
+				<PostsComponent userId={props.firebaseUser.uid} firebaseUser={props.firebaseUser} />
 			) : (<div className="text-center align-content-center b-r-sm mt-5" style={{backgroundColor: "#2f2f2f", paddingTop: '25px', paddingBottom: '10px'}}><p>Please login</p></div>)}
 			</Container>
 	)
