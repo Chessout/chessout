@@ -11,7 +11,7 @@ const PostsComponent = (props) => {
   const dbRef = RefTools.getUserHomePostsRef(props.firebaseUser);
   
   const postsRef = ref(database, dbRef);
-  const last300Posts = query(postsRef, limitToLast(5), orderByChild('reversedDateCreated'));
+  const last300Posts = query(postsRef, limitToLast(300), orderByChild('reversedDateCreated'));
   onValue(last300Posts, (snapshot) => {
     const data = snapshot.val();
     console.log(data);
