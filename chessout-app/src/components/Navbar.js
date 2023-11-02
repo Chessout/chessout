@@ -134,7 +134,7 @@ function CustomNavbar(props) {
           >
             <MenuIcon />
           </Button>
-          <Link to="/">
+          <Link to={`/home/${props.firebaseUser?.uid}`}>
             <img className="navbar-logo" src={ImageLogo} alt="Logo" />
           </Link>
           <Typography
@@ -317,7 +317,7 @@ function CustomNavbar(props) {
           <p className=" h5 mt-3">Menu</p>
           <List>
             <ListItem key="home" disablePadding>
-              <ListItemButton onClick={() => handleHomeClick('/home')}>
+              <ListItemButton onClick={() => handleHomeClick(`/home/${props.firebaseUser?.uid}`)}>
                 <ListItemIcon> <HomeIcon /> </ListItemIcon>
                 <ListItemText primary="Home" />
               </ListItemButton>

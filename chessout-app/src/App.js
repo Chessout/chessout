@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, CssBaseline, useMediaQuery } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import CustomNavbar from 'components/Navbar';
@@ -82,10 +82,10 @@ function App() {
         <Router>
           <CustomNavbar theme={theme} handleThemeChange={handleThemeChange} isMobile={isMobile} firebaseUser={firebaseUser ? firebaseUser: null}/>
           <Routes>
-            <Route path="/" element={<Home firebaseUser={firebaseUser} />} />
+            <Route path="/" element={<Navigate to={`/home/${firebaseUser?.uid}`} firebaseUser={firebaseUser}/>} />
             <Route path="/about-us" element={<About />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/home" element={<Home firebaseUser={firebaseUser} />} />
+            <Route path="/home/:userId" element={<Home firebaseUser={firebaseUser} />} />
             <Route path="/followed-players" element={<FollowedPlayers />} />
             <Route path="/my-club" element={<MyClub />} />
             <Route path="/my-clubs" element={<MyClubs firebaseUser={firebaseUser} />} />

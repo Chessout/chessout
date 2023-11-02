@@ -3,6 +3,7 @@ import { getSyncUserHomePosts } from "../utils/firebaseTools";
 import { Container, Row, Col } from "react-bootstrap";
 import UserPost from "../components/userPost";
 import TournamentPost from "../components/tournamentPost";
+import {Link, useParams} from 'react-router-dom';
 
 function homePostsReducer(state, action) {
 	if (action.type === 'RECEIVE_POSTS') {
@@ -19,13 +20,14 @@ function homePostsReducer(state, action) {
 }
 
 function Home(props) {
+	const { userId } = useParams();
 	const [posts, dispatchPosts] = useReducer(homePostsReducer, {});
 	let myPostsArray = posts ? Object.values(posts) : [];
 	myPostsArray.sort((a, b) => b.dateCreated.timestamp - a.dateCreated.timestamp);
 
 	useEffect(() => {
-		getSyncUserHomePosts(props.firebaseUser?.uid, dispatchPosts);
-	}, [props.firebaseUser?.uid]);
+		getSyncUserHomePosts(userId, dispatchPosts);
+	}, [userId]);
 
 
 	return (
