@@ -5,7 +5,6 @@ import UserPost from "../components/userPost";
 import TournamentPost from "../components/tournamentPost";
 
 function homePostsReducer(state, action) {
-	console.log("action: " + JSON.stringify(action, null, 2));
 	if (action.type === 'RECEIVE_POSTS') {
 		return {
 			...state,
