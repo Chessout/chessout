@@ -45,6 +45,7 @@ function roundResultWinnerColor(result){
 		case 1: return {whitePlayer: 'text-light-success', blackPlayer: ''};
 		case 2: return {whitePlayer: '', blackPlayer: 'text-light-success'};
 		case 3: return {whitePlayer: 'text-light-success', blackPlayer: 'text-light-success'};
+		case 4: return {whitePlayer: 'text-light-success', blackPlayer: ''};
 		case 5: return {whitePlayer: 'text-light-success', blackPlayer: ''};
 		case 6: return {whitePlayer: '', blackPlayer: 'text-light-success'};
 		case 7: return {whitePlayer: '', blackPlayer: ''};
@@ -57,7 +58,8 @@ function roundResultLabels(result){
 		case 0: return (<Typography variant="body1" fontSize="20px"><span className="font-bold">---</span></Typography>);
 		case 1: return (<Typography variant="body1" fontSize="17px"><span className="text-light-success font-bold">1</span> - 0</Typography>);
 		case 2: return (<Typography variant="body1" fontSize="17px">0 - <span className="text-light-success font-bold">1</span></Typography>);
-		case 3: return (<Typography variant="body1" fontSize="17px"><span className="text-light-success font-bold">1/2 - 1/2</span></Typography>);
+		case 3: return (<Typography variant="body1" fontSize="15px"><span className="text-light-success">1/2 - 1/2</span></Typography>);
+		case 4: return (<Typography variant="body1" fontSize="15px"><span className="text-light-success">1(Bye)</span></Typography>);
 		case 5: return (<Typography variant="body1" fontSize="17px"><span className="text-light-success font-bold">1ff</span> - 0</Typography>);
 		case 6: return (<Typography variant="body1" fontSize="17px">0 - <span className="text-light-success font-bold">1ff</span></Typography>);
 		case 7: return (<Typography variant="body1" fontSize="17px">0ff - 0ff</Typography>);
@@ -71,6 +73,7 @@ function roundResultTooltips(result, whitePlayerName, blackPlayerName){
 		case 1: return whitePlayerName + ' wins';
 		case 2: return blackPlayerName + ' wins';
 		case 3: return 'Draw';
+		case 4: return '1(Bye)';
 		case 5: return whitePlayerName + ' wins by forfeit';
 		case 6: return blackPlayerName + ' wins by forfeit';
 		case 7: return 'Double forfeit';
@@ -266,7 +269,7 @@ function TournamentRounds(props) {
 																		</Avatar>
 																	)}
 																</div>
-																<span className={`${roundResultWinnerColor(result.result).whitePlayer}`}>{result.whitePlayerName}</span>
+																<span className={`${roundResultWinnerColor(result.result)?.whitePlayer}`}>{result.whitePlayerName}</span>
 															</TableCell>
 															<TableCell align="center">
 																<Tooltip key="details" title={roundResultTooltips(result.result, result.whitePlayerName, result.blackPlayerName)} arrow placement="bottom" componentsProps={componentsProps}>
@@ -275,15 +278,21 @@ function TournamentRounds(props) {
 															</TableCell>
 															<TableCell width={props.isMobile ? '' : '45%'} align="center" style={props.isMobile ? {} : { paddingRight: '30%' }}>
 																<div className="d-flex justify-content-center">
-																	{result.blackPlayerImage ? (
-																		<Avatar aria-label="player" src={result.blackPlayerImage} sx={{ width: 55, height: 55}} />
-																	):(
-																		<Avatar aria-label="player" sx={{ width: 55, height: 55, backgroundColor: 'transparent'}}>
-																			<AccountCircleIcon sx={{ width: 60, height: 60, color: 'white'}}/>
-																		</Avatar>
+																	{result.blackPlayerName ? (
+																		<div>
+																			{result.blackPlayerImage ? (
+																				<Avatar aria-label="player" src={result.blackPlayerImage} sx={{ width: 55, height: 55}} />
+																			):(
+																				<Avatar aria-label="player" sx={{ width: 55, height: 55, backgroundColor: 'transparent'}}>
+																					<AccountCircleIcon sx={{ width: 60, height: 60, color: 'white'}}/>
+																				</Avatar>
+																			)}
+																		</div>
+																	) : (
+																		''
 																	)}
 																</div>
-																<span className={`${roundResultWinnerColor(result.result).blackPlayer}`}>{result.blackPlayerName}</span>
+																<span className={`${roundResultWinnerColor(result.result)?.blackPlayer}`}>{result.blackPlayerName}</span>
 															</TableCell>
 														</TableRow>
 
