@@ -15,8 +15,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import GroupIcon from '@mui/icons-material/Group';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Link } from 'react-router-dom';
-import { getUserHomePosts, getPostsLikes, getPostChat, getUserProfilePicture, getClub, getTournament, getTournamentPlayers, getTournamentRoundGamesDecoded } from "../utils/firebaseTools";
-import {get, getDatabase, push, set} from "firebase/database";
+import { getSyncPostsLikes, getSyncPostChat, getSyncClub, getSyncTournament, getSyncTournamentPlayers, getSyncTournamentRoundGamesDecoded } from "../utils/firebaseTools";
 import {getDownloadURL, getStorage, ref} from "firebase/storage";
 import {firebaseApp} from "../config/firebase";
 import ClubImage from '../assets/images/default_chess_club.jpg';
@@ -55,12 +54,12 @@ const TournamentPost = ({post, userId, title,  isPairingsType,  goToLink, goToLa
 	const [tournamentRoundGames, setTournamentRoundGames] = useState({});
 
 	useEffect(()=>{
-		getPostsLikes('', post?.clubId, post?.postId, setLikes);
-		getPostChat(post?.postId, setComments);
-		getClub(post?.clubId, setClubInfo);
-		getTournament(post?.clubId, post?.tournamentId, setTournament);
-		getTournamentPlayers(post?.clubId, post?.tournamentId, setTournamentPlayers);
-		getTournamentRoundGamesDecoded(post?.clubId, post?.tournamentId, post?.roundId, setTournamentRoundGames);
+		getSyncPostsLikes('', post?.clubId, post?.postId, setLikes);
+		getSyncPostChat(post?.postId, setComments);
+		getSyncClub(post?.clubId, setClubInfo);
+		getSyncTournament(post?.clubId, post?.tournamentId, setTournament);
+		getSyncTournamentPlayers(post?.clubId, post?.tournamentId, setTournamentPlayers);
+		getSyncTournamentRoundGamesDecoded(post?.clubId, post?.tournamentId, post?.roundId, setTournamentRoundGames);
 	}, []);
 
 	const getPostDetails = async () => {
@@ -125,9 +124,9 @@ const TournamentPost = ({post, userId, title,  isPairingsType,  goToLink, goToLa
 								}}
 							>
 								<MenuItem onClick={handleMenuClose}>Delete post</MenuItem>
-								{/*<MenuItem component={Link} to={goToLink}>*/}
-								{/*	{goToLabel}*/}
-								{/*</MenuItem>*/}
+								<MenuItem component={Link} to={goToLink}>
+									{goToLabel}
+								</MenuItem>
 							</Menu>
 						</div>
 					</React.Fragment>

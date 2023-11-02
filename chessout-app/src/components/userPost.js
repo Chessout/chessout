@@ -10,8 +10,7 @@ import Fade from "@mui/material/Fade";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { getUserHomePosts, getPostsLikes, getPostChat, getUserProfilePicture, getClub, getTournament, getTournamentPlayers, getTournamentRoundGamesDecoded } from "../utils/firebaseTools";
-import {get, getDatabase, push, set} from "firebase/database";
+import { getSyncPostsLikes, getSyncPostChat, getSyncUserProfilePicture} from "../utils/firebaseTools";
 import {getDownloadURL, getStorage, ref} from "firebase/storage";
 import {firebaseApp} from "../config/firebase";
 import {getPostTime} from "../utils/generalTools";
@@ -47,8 +46,8 @@ const UserPost = ({post, userId}) => {
 	const [userImage, setUserImage] = useState(null);
 
 	useEffect(()=>{
-		getPostsLikes('', post?.clubId, post?.postId, setLikes);
-		getPostChat(post?.postId, setComments);
+		getSyncPostsLikes('', post?.clubId, post?.postId, setLikes);
+		getSyncPostChat(post?.postId, setComments);
 	}, []);
 
 	const getPostDetails = async () => {
@@ -65,7 +64,7 @@ const UserPost = ({post, userId}) => {
 
 		//get the image of user
 		let user_image = null;
-		post.userImage = await getUserProfilePicture(post.userId);
+		post.userImage = await getSyncUserProfilePicture(post.userId);
 		if (post.userImage.uploadComplete) {
 			try {
 				user_image = await getDownloadURL(ref(storage, post.userImage.stringUri));

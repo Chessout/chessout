@@ -62,59 +62,72 @@ export async function readMyClubs(user) {
 	return myClubs;
 }
 
-export function getUserHomePosts(user, dispatchPosts) {
-	const postsLocation = `${USER_SETTINGS}/${user}/${USER_STREAM}/${POST_ITEMS}`;
-	const posts = query(ref(getDatabase(firebaseApp), postsLocation), limitToFirst(100));
+export async function getUserHomePosts(user) {
+	const LOCATION_USER_STREAM_POSTS = `${USER_SETTINGS}/${USER_KEY}/${USER_STREAM}/${POST_ITEMS}`;
+	let postsLocation = LOCATION_USER_STREAM_POSTS.replace(USER_KEY, user);
 
-	onValue(posts, (snapshot) => {
-		const data = snapshot.val();
-		dispatchPosts({
-			type: 'RECEIVE_POSTS',
-			posts: data,
-		});
-	});
+	const userHomePosts = await get(ref(getDatabase(firebaseApp), postsLocation));
+	if (userHomePosts.exists()) {
+		return userHomePosts.val();
+	} else {
+		return null;
+	}
 }
 
-export function getPostsLikes(user, club, post, setData) {
+export async function getPostsLikes(user, club, post) {
 	const CLUB_POST_LIKE = `${CLUB_POSTS}/${club}/${POST_LIKES}/${post}/${user}`;
-	const postsLikesData = query(ref(getDatabase(firebaseApp), CLUB_POST_LIKE));
+	const postsLikesData = await get(ref(getDatabase(firebaseApp), CLUB_POST_LIKE));
 
-	onValue(postsLikesData, (snapshot) => {
-		const data = snapshot.val();
-		if(data){
-			const dataArray = Object.values(data);
-			setData(dataArray);
-		}
-	});
+	if (postsLikesData.exists()) {
+		return postsLikesData.val();
+	} else {
+		return null;
+	}
 }
 
-export async function getPostChat(postId, setData) {
-	const currentTimestamp = Date.now();
-	const CHAT_LOCATION = `${CHAT}/${postId}/${CHAT_ITEMS}`;
-	const chatData = query(ref(getDatabase(firebaseApp), CHAT_LOCATION));
+export function newGenericInstance(locationType, chatClubId, chatTournamentId, chatRoundId, userId) {
+	const chat = {
+		locationType,
+		chatClubId,
+		chatTournamentId,
+		chatRoundId,
+		userId,
+		timeStampCreate: new Date().getTime(),
+		timeStampEdit: new Date().getTime(),
+	};
+	return chat;
+}
 
-	onValue(chatData, async (snapshot) => {
-		const data = snapshot.val();
-		if(data){
-			const dataArray = Object.values(data);
-			if(dataArray){
-				for (const comment of dataArray) {
-					comment.userImage =  await getUserProfilePicture(comment.userId);
-					if (comment.userImage.uploadComplete) {
-						try {
-							comment.userImage.img_src = await getDownloadURL(refStorage(storage, comment.userImage.stringUri));
-						} catch (error) {
-							comment.userImage.img_src = null;
-						}
-					} else {
-						comment.userImage.img_src = comment.userImage.stringUri;
-					}
-					comment.time = getCommentTime(comment?.timeStampCreate);
-				}
-				setData(dataArray);
-			}
-		}
-	});
+export function newTextInstance(locationType, chatClubId, chatTournamentId, chatRoundId, itemType, userId, userName, textValue) {
+	const chat = newGenericInstance(locationType, chatClubId, chatTournamentId, chatRoundId, userId);
+	chat.itemType = itemType;
+	chat.userId = userId;
+	chat.userName = userName;
+	chat.textValue = textValue;
+	return chat;
+}
+
+export async function getTournamentChat(tournamentId, roundId) {
+	const chatFolderKey = `${tournamentId}-round-${roundId}`;
+	const CHAT_LOCATION = `${CHAT}/${chatFolderKey}/${CHAT_ITEMS}`;
+	const chatData = await get(ref(getDatabase(firebaseApp), CHAT_LOCATION));
+
+	if (chatData.exists()) {
+		return chatData.val();
+	} else {
+		return null;
+	}
+}
+
+export async function getPostChat(postId) {
+	const CHAT_LOCATION = `${CHAT}/${postId}/${CHAT_ITEMS}`;
+	const chatData = await get(ref(getDatabase(firebaseApp), CHAT_LOCATION));
+
+	if (chatData.exists()) {
+		return chatData.val();
+	} else {
+		return null;
+	}
 }
 
 export async function getUserProfilePicture(userId) {
@@ -128,41 +141,37 @@ export async function getUserProfilePicture(userId) {
 	}
 }
 
-export function getClub(clubId, setData) {
+export async function getClub(clubId) {
 	const LOCATION_CLUB = `${CLUBS}/${clubId}`;
-	const clubData = query(ref(getDatabase(firebaseApp), LOCATION_CLUB));
+	const clubData = await get(ref(getDatabase(firebaseApp), LOCATION_CLUB));
 
-	onValue(clubData, (snapshot) => {
-		const data = snapshot.val();
-		if(data){
-			setData(data);
-		}
-	});
+	if (clubData.exists()) {
+		return clubData.val();
+	} else {
+		return null;
+	}
 }
 
-export function getTournament(clubId, tournamentId, setData) {
+export async function getTournament(clubId, tournamentId) {
 	const LOCATION_TOURNAMENT = `${TOURNAMENTS}/${clubId}/${tournamentId}`;
-	const tournamentData = query(ref(getDatabase(firebaseApp), LOCATION_TOURNAMENT));
+	const tournamentData = await get(ref(getDatabase(firebaseApp), LOCATION_TOURNAMENT));
 
-	onValue(tournamentData, (snapshot) => {
-		const data = snapshot.val();
-		if(data){
-			setData(data);
-		}
-	});
+	if (tournamentData.exists()) {
+		return tournamentData.val();
+	} else {
+		return null;
+	}
 }
 
-export function getTournamentPlayers(clubId, tournamentId, setData) {
+export async function getTournamentPlayers(clubId, tournamentId) {
 	const LOCATION_TOURNAMENT_PLAYERS = `${TOURNAMENT_PLAYERS}/${clubId}/${tournamentId}`;
-	const tournamentPlayersData = query(ref(getDatabase(firebaseApp), LOCATION_TOURNAMENT_PLAYERS));
+	const tournamentPlayersData = await get(ref(getDatabase(firebaseApp), LOCATION_TOURNAMENT_PLAYERS));
 
-	onValue(tournamentPlayersData, (snapshot) => {
-		const data = snapshot.val();
-		if(data){
-			const dataArray = Object.values(data);
-			setData(dataArray);
-		}
-	});
+	if (tournamentPlayersData.exists()) {
+		return tournamentPlayersData.val();
+	} else {
+		return null;
+	}
 }
 
 function decodeGames(games) {
@@ -197,17 +206,16 @@ export async function getTournamentRoundGames(clubId, tournamentId, roundId) {
 	}
 }
 
-export async function getTournamentRoundGamesDecoded(clubId, tournamentId, roundId, setData) {
+export async function getTournamentRoundGamesDecoded(clubId, tournamentId, roundId) {
 	const LOCATION_ROUND_GAMES = `${TOURNAMENT_ROUNDS}/${clubId}/${tournamentId}/${roundId}/${GAMES}`;
-	const roundData = query(ref(getDatabase(firebaseApp), LOCATION_ROUND_GAMES));
+	const roundData = await get(ref(getDatabase(firebaseApp), LOCATION_ROUND_GAMES));
 
-	onValue(roundData, (snapshot) => {
-		const data = snapshot.val();
-		if(data){
-			const decodedGames = decodeGames(data);
-			setData({completedGames: decodedGames.completedGames, totalGames: decodedGames.totalGames});
-		}
-	});
+	if (roundData.exists()) {
+		const decodedGames = decodeGames(roundData.val());
+		return {completedGames: decodedGames.completedGames, totalGames: decodedGames.totalGames};
+	} else {
+		return null;
+	}
 }
 
 export async function getTournaments(clubId) {
@@ -305,4 +313,159 @@ export async function getClubPlayer(clubId, playerId) {
 	} else {
 		return null;
 	}
+}
+
+// functions that use firebase onValue syntax
+export function getSyncUserHomePosts(user, dispatchPosts) {
+	const postsLocation = `${USER_SETTINGS}/${user}/${USER_STREAM}/${POST_ITEMS}`;
+	const posts = query(ref(getDatabase(firebaseApp), postsLocation), limitToFirst(100));
+
+	onValue(posts, (snapshot) => {
+		const data = snapshot.val();
+		dispatchPosts({
+			type: 'RECEIVE_POSTS',
+			posts: data,
+		});
+
+		// Check for deleted posts here
+		const existingPostIds = Object.keys(data || {});
+		// Compare with the previously stored post IDs, and find the deleted ones
+		const deletedPostIds = Object.keys(prevData).filter((postId) => !existingPostIds.includes(postId));
+		// Dispatch action to remove deleted posts
+		deletedPostIds.forEach((postId) => {
+			dispatchPosts({
+				type: 'REMOVE_POST',
+				postId,
+			});
+		});
+
+		// Store the current data for comparison in the next update
+		prevData = data;
+	});
+}
+let prevData = {};
+
+
+export function getSyncPostsLikes(user, club, post, setData) {
+	const CLUB_POST_LIKE = `${CLUB_POSTS}/${club}/${POST_LIKES}/${post}/${user}`;
+	const postsLikesData = query(ref(getDatabase(firebaseApp), CLUB_POST_LIKE));
+
+	onValue(postsLikesData, (snapshot) => {
+		const data = snapshot.val();
+		if(data){
+			const dataArray = Object.values(data);
+			setData(dataArray);
+		}else {
+			setData([]);
+		}
+	});
+}
+
+export async function getSyncPostChat(postId, setData) {
+	const currentTimestamp = Date.now();
+	const CHAT_LOCATION = `${CHAT}/${postId}/${CHAT_ITEMS}`;
+	const chatData = query(ref(getDatabase(firebaseApp), CHAT_LOCATION));
+
+	onValue(chatData, async (snapshot) => {
+		const data = snapshot.val();
+		if(data){
+			const dataArray = Object.values(data);
+			if(dataArray){
+				for (const comment of dataArray) {
+					comment.userImage =  await getUserProfilePicture(comment.userId);
+					if (comment.userImage?.uploadComplete) {
+						try {
+							comment.userImage.img_src = await getDownloadURL(refStorage(storage, comment.userImage.stringUri));
+						} catch (error) {
+							comment.userImage.img_src = null;
+						}
+					} else {
+						comment.userImage.img_src = comment.userImage.stringUri;
+					}
+					comment.time = getCommentTime(comment?.timeStampCreate);
+				}
+				setData(dataArray);
+			}
+		}
+	});
+}
+
+export async function getSyncUserProfilePicture(userId) {
+	return new Promise((resolve, reject) => {
+		const LOCATION_USER_PROFILE_PICTURE = `${USER_PUBLIC_INFO}/${userId}/${PROFILE_PICTURE}`;
+		const imageData = query(ref(getDatabase(firebaseApp), LOCATION_USER_PROFILE_PICTURE));
+
+		onValue(imageData, (snapshot) => {
+			const data = snapshot.val();
+			if (data) {
+				resolve(data);
+			} else {
+				resolve(null);
+			}
+		});
+	});
+}
+
+
+export function getSyncClub(clubId, setData) {
+	const LOCATION_CLUB = `${CLUBS}/${clubId}`;
+	const clubData = query(ref(getDatabase(firebaseApp), LOCATION_CLUB));
+
+	onValue(clubData, (snapshot) => {
+		const data = snapshot.val();
+		if(data){
+			setData(data);
+		}
+	});
+}
+
+export function getSyncTournament(clubId, tournamentId, setData) {
+	const LOCATION_TOURNAMENT = `${TOURNAMENTS}/${clubId}/${tournamentId}`;
+	const tournamentData = query(ref(getDatabase(firebaseApp), LOCATION_TOURNAMENT));
+
+	onValue(tournamentData, (snapshot) => {
+		const data = snapshot.val();
+		if(data){
+			setData(data);
+		}
+	});
+}
+
+export function getSyncTournamentPlayers(clubId, tournamentId, setData) {
+	const LOCATION_TOURNAMENT_PLAYERS = `${TOURNAMENT_PLAYERS}/${clubId}/${tournamentId}`;
+	const tournamentPlayersData = query(ref(getDatabase(firebaseApp), LOCATION_TOURNAMENT_PLAYERS));
+
+	onValue(tournamentPlayersData, (snapshot) => {
+		const data = snapshot.val();
+		if(data){
+			const dataArray = Object.values(data);
+			setData(dataArray);
+		}
+	});
+}
+
+export function getSyncTournamentRoundGamesDecoded(clubId, tournamentId, roundId, setData) {
+	const LOCATION_ROUND_GAMES = `${TOURNAMENT_ROUNDS}/${clubId}/${tournamentId}/${roundId}/${GAMES}`;
+	const roundData = query(ref(getDatabase(firebaseApp), LOCATION_ROUND_GAMES));
+
+	onValue(roundData, (snapshot) => {
+		const data = snapshot.val();
+		if(data){
+			const decodedGames = decodeGames(data);
+			setData({completedGames: decodedGames.completedGames, totalGames: decodedGames.totalGames});
+		}
+	});
+}
+
+export function getSyncTournaments(clubId, setData) {
+	const LOCATION_TOURNAMENTS = `${TOURNAMENTS}/${clubId}`;
+	const tournamentsData = query(ref(getDatabase(firebaseApp), LOCATION_TOURNAMENTS));
+
+	onValue(tournamentsData, (snapshot) => {
+		const data = snapshot.val();
+		if(data){
+			const dataArray = Object.values(data);
+			setData(dataArray);
+		}
+	});
 }

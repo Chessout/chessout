@@ -64,7 +64,7 @@ function App() {
 
   // get the default user club
   const getMyDefaultClub = async () => {
-    return await readMyDefaultClub(firebaseUser.uid);
+    return await readMyDefaultClub(firebaseUser?.uid);
   };
 
   return (

@@ -1,15 +1,21 @@
 import React, {useEffect, useReducer} from "react";
-import { getUserHomePosts } from "../utils/firebaseTools";
+import { getSyncUserHomePosts } from "../utils/firebaseTools";
 import { Container, Row, Col } from "react-bootstrap";
 import UserPost from "../components/userPost";
 import TournamentPost from "../components/tournamentPost";
 
 function homePostsReducer(state, action) {
+	console.log("action: " + JSON.stringify(action, null, 2));
 	if (action.type === 'RECEIVE_POSTS') {
 		return {
 			...state,
 			...action.posts,
 		};
+	}
+	if (action.type === 'REMOVE_POST') {
+		const newState = { ...state };
+		delete newState[action.postId];
+		return newState;
 	}
 }
 
@@ -19,8 +25,9 @@ function Home(props) {
 	myPostsArray.sort((a, b) => b.dateCreated.timestamp - a.dateCreated.timestamp);
 
 	useEffect(() => {
-		getUserHomePosts(props.firebaseUser?.uid, dispatchPosts);
+		getSyncUserHomePosts(props.firebaseUser?.uid, dispatchPosts);
 	}, [props.firebaseUser?.uid]);
+
 
 	return (
 		<Container className="mt-2 mb-5">
