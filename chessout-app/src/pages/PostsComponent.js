@@ -14,7 +14,7 @@ const PostsComponent = (props) => {
   const last300Posts = query(postsRef, limitToLast(300), orderByChild('reversedDateCreated'));
   onValue(last300Posts, (snapshot) => {
     const data = snapshot.val();
-    console.log(data);
+    //console.log(data);
   });
 
   // listen on ganges an log the changes

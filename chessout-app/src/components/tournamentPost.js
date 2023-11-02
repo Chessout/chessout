@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import { Avatar, Typography, CardHeader, CardContent, Card, CardActions, IconButton } from "@mui/material";
 import {Button} from "react-bootstrap";
 import { Collapse } from '@mui/material';
@@ -15,6 +15,12 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import GroupIcon from '@mui/icons-material/Group';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Link } from 'react-router-dom';
+import { getUserHomePosts, getPostsLikes, getPostChat, getUserProfilePicture, getClub, getTournament, getTournamentPlayers, getTournamentRoundGamesDecoded } from "../utils/firebaseTools";
+import {get, getDatabase, push, set} from "firebase/database";
+import {getDownloadURL, getStorage, ref} from "firebase/storage";
+import {firebaseApp} from "../config/firebase";
+import ClubImage from '../assets/images/default_chess_club.jpg';
+import {getPostTime} from "../utils/generalTools";
 
 const componentsProps={
 	tooltip: {
@@ -38,9 +44,45 @@ const componentsProps={
 	TransitionComponent: Fade,
 };
 
-const TournamentPost = ({title, user, time, avatar, likesCount, likes, commentsCount, comments, isLikedByCurrentUser, tName, tLocation, tPlayersCount, isPairingsType, completedGames, totalGames, goToLink, goToLabel}) => {
-	const [isCommentVisible, setIsCommentVisible] = useState(false);
+const TournamentPost = ({post, userId, title,  isPairingsType,  goToLink, goToLabel}) => {
+	const storage = getStorage(firebaseApp);
+	const [likes, setLikes] = useState([]);
+	const [comments, setComments] = useState([]);
+	const [clubImage, setClubImage] = useState(null);
+	const [clubInfo, setClubInfo] = useState([]);
+	const [tournament, setTournament] = useState({});
+	const [tournamentPlayers, setTournamentPlayers] = useState([]);
+	const [tournamentRoundGames, setTournamentRoundGames] = useState({});
 
+	useEffect(()=>{
+		getPostsLikes('', post?.clubId, post?.postId, setLikes);
+		getPostChat(post?.postId, setComments);
+		getClub(post?.clubId, setClubInfo);
+		getTournament(post?.clubId, post?.tournamentId, setTournament);
+		getTournamentPlayers(post?.clubId, post?.tournamentId, setTournamentPlayers);
+		getTournamentRoundGamesDecoded(post?.clubId, post?.tournamentId, post?.roundId, setTournamentRoundGames);
+	}, []);
+
+	const getPostDetails = async () => {
+		//get the image of club
+		let new_club_image = null;
+		if (post?.clubPictureUrl) {
+			try {
+				new_club_image = await getDownloadURL(ref(storage, post.clubPictureUrl));
+			} catch (error) {
+				new_club_image = ClubImage;
+			}
+		} else {
+			new_club_image = ClubImage;
+		}
+		setClubImage(new_club_image);
+	};
+
+	useEffect(()=>{
+		getPostDetails();
+	}, []);
+
+	const [isCommentVisible, setIsCommentVisible] = useState(false);
 	const toggleCommentVisibility = () => {
 		setIsCommentVisible(!isCommentVisible);
 	};
@@ -57,13 +99,13 @@ const TournamentPost = ({title, user, time, avatar, likesCount, likes, commentsC
 		<Card className="b-r-sm">
 			<CardHeader
 				avatar={
-					<Avatar aria-label="User" src={avatar}>
+					<Avatar aria-label="User" src={clubImage}>
 						U
 					</Avatar>
 				}
 				title={
 					<React.Fragment>
-						<span>{user}</span>
+						<span>{clubInfo?.name}</span>
 						<div className="float-end">
 							<IconButton
 								aria-controls="post-menu"
@@ -90,7 +132,7 @@ const TournamentPost = ({title, user, time, avatar, likesCount, likes, commentsC
 						</div>
 					</React.Fragment>
 				}
-				subheader={time}
+				subheader={getPostTime(post?.dateCreated.timestamp)}
 			/>
 			<CardContent style={{marginTop: '-15px'}}>
 				<Typography variant="body1" color="textPrimary">
@@ -102,23 +144,23 @@ const TournamentPost = ({title, user, time, avatar, likesCount, likes, commentsC
 				<CardContent style={{paddingLeft: '50px', paddingRight: '50px'}}>
 					<div className="d-flex justify-content-between mb-2">
 						<Typography><EventNoteIcon fontSize="small" style={{marginTop: '-5px', color: '#198754'}}/> Name</Typography>
-						<Typography>{tName}</Typography>
+						<Typography>{tournament?.name}</Typography>
 					</div>
 					<Divider color={"grey"} />
 					<div className="d-flex justify-content-between mt-2 mb-2">
 						<Typography><LocationOnOutlinedIcon fontSize="small" style={{marginTop: '-5px', marginRight: '4px', color: '#198754'}}/>Location</Typography>
-						<Typography>{tLocation}</Typography>
+						<Typography>{tournament?.location}</Typography>
 					</div>
 					<Divider color={"grey"} />
 					{!isPairingsType ? (
 						<div className="d-flex justify-content-between mt-2">
 							<Typography><GroupIcon fontSize="small" style={{marginTop: '-5px', marginRight: '4px', color: '#198754'}}/>Registered Players</Typography>
-							<Typography>{tPlayersCount} players</Typography>
+							<Typography>{tournamentPlayers.length} players</Typography>
 						</div>
 					):(
 						<div className="d-flex justify-content-between mt-2">
 							<Typography><CheckCircleIcon fontSize="small" style={{marginTop: '-5px', marginRight: '3px', color: '#198754'}}/>Completed Games</Typography>
-							<Typography>{completedGames} / {totalGames}</Typography>
+							<Typography>{tournamentRoundGames?.completedGames} / {tournamentRoundGames?.totalGames}</Typography>
 						</div>
 					)}
 				</CardContent>
@@ -126,31 +168,31 @@ const TournamentPost = ({title, user, time, avatar, likesCount, likes, commentsC
 			<Divider color={"#2f2f2f"} />
 			<CardActions className="d-flex justify-content-between">
 				<div>
-					{isLikedByCurrentUser ? (
+					{likes.some((like) => like.userId === userId) ? (
 						<Tooltip key="unlike" title="Unlike the post" arrow placement="bottom" componentsProps={componentsProps}>
 							<IconButton aria-label="unlike" size="small" className="text-danger">
 								<FavoriteIcon fontSize="small" />
 							</IconButton>
 						</Tooltip>
-					):(
+					) : (
 						<Tooltip key="like" title="Like the post" arrow placement="bottom" componentsProps={componentsProps}>
 							<IconButton aria-label="Like" size="small" className="text-danger">
 								<FavoriteBorderIcon />
 							</IconButton>
 						</Tooltip>
 					)}
-					<span className="font-size-xs">{likesCount} Likes</span>
+					<span className="font-size-xs">{likes.length} Likes</span>
 				</div>
 				<div>
 					<Tooltip key="comment" title={!isCommentVisible ? `Show comments section` : 'Hide comments section'} arrow placement="bottom" componentsProps={componentsProps}>
-						<Button variant="link" className="font-size-xs text-light text-decoration-none" onClick={toggleCommentVisibility}>{commentsCount} Comments</Button>
+						<Button variant="link" className="font-size-xs text-light text-decoration-none" onClick={toggleCommentVisibility}>{comments.length} Comments</Button>
 					</Tooltip>
 				</div>
 			</CardActions>
 
 			<Collapse in={isCommentVisible}>
 				<Divider color={"#2f2f2f"} />
-				{commentsCount? (
+				{comments? (
 					comments.map((comment) =>(
 						<React.Fragment key={comment.chatId + comment.userId}>
 							<Divider color={"#2f2f2f"} style={{width: '90%', marginLeft: '11%', marginTop: '-1px'}}/>
