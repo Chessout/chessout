@@ -198,7 +198,7 @@ function CustomNavbar(props) {
         >
           {props.firebaseUser ? (
             <>
-              <p className="text-center h5 mt-3">Platform Account:</p>
+              <p className="text-center h5 mt-3">Account Details:</p>
               <p className="text-center mt-2">{props.firebaseUser.email}</p>
               <div className="d-flex justify-content-center">
                 <Button
@@ -226,77 +226,77 @@ function CustomNavbar(props) {
               </div>
             </>
           )}
-          <Divider color={"white"} style={{width: '115%', marginLeft: '-10%'}} className="mt-3"/>
-          {address ? (
-            <>
-              <p className="text-center h5 mt-3">MultiversX Account:</p>
-              <div className="d-flex justify-content-center">
-                <p className="font-size-sm font-lighter">
-                  {address.slice(0, 17)} ... {address.slice(50, 62)}
-                </p>
-                {!isCopied ? (
-                  <Button
-                    variant="link"
-                    onClick={() => CopyToClipboard(address)}
-                    className="text-white m-t-n-sm"
-                  >
-                    <ContentCopy fontSize="10px" style={{marginTop: '-10px'}}/>
-                  </Button>
-                ) : (
-                  <Button variant="link" className="text-white m-t-n-sm">
-                    <Check fontSize="10px" style={{marginTop: '-10px'}}/>
-                  </Button>
-                )}
-              </div>
-              <div className="d-flex justify-content-center">
-                <Button
-                  size="sm"
-                  variant={"light"}
-                  onClick={() => logout()}
-                  className="mb-2 btn-block b-r-xs font-size-xs"
-                >
-                  Sign out
-                </Button>
-              </div>
-            </>
-          ):(
-            <>
-              <p className="text-center h5 mt-2">MultiversX Login:</p>
-              <div className="d-flex justify-content-center mt-2">
-                <WebWalletLoginButton
-                  callbackRoute="/home"
-                  nativeAuth={true}
-                  loginButtonText="Web wallet"
-                  className="btn btn-sm btn-light b-r-xs font-size-xs btn-block"
-                />
-              </div>
-              <div className="d-flex justify-content-center w-auto">
-                <LedgerLoginButton
-                  callbackRoute="/home"
-                  loginButtonText="Ledger"
-                  nativeAuth={true}
-                  className="btn btn-sm btn-light b-r-xs font-size-xs btn-block"
-                />
-              </div>
-              <div className="d-flex justify-content-center">
-                <WalletConnectLoginButton
-                  callbackRoute="/home"
-                  nativeAuth={true}
-                  loginButtonText={"xPortal App"}
-                  isWalletConnectV2={true}
-                  className="btn btn-sm btn-light b-r-xs font-size-xs btn-block"
-                />
-              </div>
-              <div className="d-flex justify-content-center">
-                <ExtensionLoginButton
-                  callbackRoute="/home"
-                  nativeAuth={true}
-                  loginButtonText="Extension"
-                  className="btn btn-sm btn-light b-r-xs font-size-xs btn-block"
-                />
-              </div>
-            </>
-          )}
+          {/*<Divider color={"white"} style={{width: '115%', marginLeft: '-10%'}} className="mt-3"/>*/}
+          {/*{address ? (*/}
+          {/*  <>*/}
+          {/*    <p className="text-center h5 mt-3">MultiversX Account:</p>*/}
+          {/*    <div className="d-flex justify-content-center">*/}
+          {/*      <p className="font-size-sm font-lighter">*/}
+          {/*        {address.slice(0, 17)} ... {address.slice(50, 62)}*/}
+          {/*      </p>*/}
+          {/*      {!isCopied ? (*/}
+          {/*        <Button*/}
+          {/*          variant="link"*/}
+          {/*          onClick={() => CopyToClipboard(address)}*/}
+          {/*          className="text-white m-t-n-sm"*/}
+          {/*        >*/}
+          {/*          <ContentCopy fontSize="10px" style={{marginTop: '-10px'}}/>*/}
+          {/*        </Button>*/}
+          {/*      ) : (*/}
+          {/*        <Button variant="link" className="text-white m-t-n-sm">*/}
+          {/*          <Check fontSize="10px" style={{marginTop: '-10px'}}/>*/}
+          {/*        </Button>*/}
+          {/*      )}*/}
+          {/*    </div>*/}
+          {/*    <div className="d-flex justify-content-center">*/}
+          {/*      <Button*/}
+          {/*        size="sm"*/}
+          {/*        variant={"light"}*/}
+          {/*        onClick={() => logout()}*/}
+          {/*        className="mb-2 btn-block b-r-xs font-size-xs"*/}
+          {/*      >*/}
+          {/*        Sign out*/}
+          {/*      </Button>*/}
+          {/*    </div>*/}
+          {/*  </>*/}
+          {/*):(*/}
+          {/*  <>*/}
+          {/*    <p className="text-center h5 mt-2">MultiversX Login:</p>*/}
+          {/*    <div className="d-flex justify-content-center mt-2">*/}
+          {/*      <WebWalletLoginButton*/}
+          {/*        callbackRoute="/home"*/}
+          {/*        nativeAuth={true}*/}
+          {/*        loginButtonText="Web wallet"*/}
+          {/*        className="btn btn-sm btn-light b-r-xs font-size-xs btn-block"*/}
+          {/*      />*/}
+          {/*    </div>*/}
+          {/*    <div className="d-flex justify-content-center w-auto">*/}
+          {/*      <LedgerLoginButton*/}
+          {/*        callbackRoute="/home"*/}
+          {/*        loginButtonText="Ledger"*/}
+          {/*        nativeAuth={true}*/}
+          {/*        className="btn btn-sm btn-light b-r-xs font-size-xs btn-block"*/}
+          {/*      />*/}
+          {/*    </div>*/}
+          {/*    <div className="d-flex justify-content-center">*/}
+          {/*      <WalletConnectLoginButton*/}
+          {/*        callbackRoute="/home"*/}
+          {/*        nativeAuth={true}*/}
+          {/*        loginButtonText={"xPortal App"}*/}
+          {/*        isWalletConnectV2={true}*/}
+          {/*        className="btn btn-sm btn-light b-r-xs font-size-xs btn-block"*/}
+          {/*      />*/}
+          {/*    </div>*/}
+          {/*    <div className="d-flex justify-content-center">*/}
+          {/*      <ExtensionLoginButton*/}
+          {/*        callbackRoute="/home"*/}
+          {/*        nativeAuth={true}*/}
+          {/*        loginButtonText="Extension"*/}
+          {/*        className="btn btn-sm btn-light b-r-xs font-size-xs btn-block"*/}
+          {/*      />*/}
+          {/*    </div>*/}
+          {/*  </>*/}
+          {/*)}*/}
         </div>
       </SwipeableDrawer>
 
