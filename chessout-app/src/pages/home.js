@@ -42,7 +42,6 @@ function Home(props) {
 			</Container>
 		);
 	}
-	console.log(userId)
 
 	return (
 		<Container className="mt-2 mb-5">
@@ -68,7 +67,7 @@ function Home(props) {
 												title={"New tournament created"}
 												isPairingsType={false}
 												goToLabel="View Tournament"
-												goToLink={`/tournament-players/${post.tournamentId}`}
+												goToLink={`/tournament-players/${post.clubId}/${post.tournamentId}`}
 											/>
 										</Col>
 									)}
@@ -81,7 +80,7 @@ function Home(props) {
 												title={`Round ${post.roundId} pairings available`}
 												isPairingsType={true}
 												goToLabel="View Pairings"
-												goToLink={`/tournament-rounds/${post.tournamentId}/${post.roundId - 1}`}
+												goToLink={`/tournament-rounds/${post.clubId}/${post.tournamentId}/${post.roundId - 1}`}
 											/>
 										</Col>
 									)}
