@@ -13,8 +13,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Carousel from 'react-bootstrap/Carousel';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
 
 function TournamentStandings(props) {
 	const { tournamentId } = useParams();
@@ -81,27 +79,17 @@ function TournamentStandings(props) {
 				<Col xs={12} lg={{ offset: 1, span: 10 }}>
 					<div className="p-3 b-r-sm mt-4" style={{backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))"}}>
 						<Row style={{ display: 'flex', alignItems: "center" }}>
-							<Col xs={12} lg={3} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center'}`}>
+							<Col xs={12} lg={4} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center'}`}>
 								<Typography color={'#66bb6a'} variant="caption">Tournament Name</Typography>
 								<Typography>{tournament?.name}</Typography>
 							</Col>
-							<Col xs={12} lg={3} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center'}`}>
+							<Col xs={12} lg={4} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center'}`}>
 								<Typography color={'#66bb6a'} variant="caption">Tournament Location</Typography>
 								<Typography>{tournament?.location}</Typography>
 							</Col>
-							<Col xs={12} lg={3} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center border-end'}`}>
+							<Col xs={12} lg={4} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center border-end'}`}>
 								<Typography color={'#66bb6a'} variant="caption">Tournament Rounds</Typography>
 								<Typography>{tournament?.totalRounds}</Typography>
-							</Col>
-							<Col xs={12} lg={3} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center border-end'}`}>
-								<Typography color={'#66bb6a'} variant="caption">MultiversX Tournament</Typography>
-								<div>
-									{tournament?.multiversXTournamentId ? (
-										<CheckIcon />
-									) : (
-										<CloseIcon />
-									)}
-								</div>
 							</Col>
 						</Row>
 
@@ -129,7 +117,6 @@ function TournamentStandings(props) {
 									component={Link}
 									to={`/tournament-rounds/${tournamentId}/0`}
 									variant="text"
-									className="me-2"
 									style={{
 										borderRadius: 0,
 										border: 'none',
@@ -142,7 +129,7 @@ function TournamentStandings(props) {
 								<MuiButton
 									variant="text"
 									color={'success'}
-									className="me-2"
+									className="ms-2"
 									style={{
 										borderBottom: ' 1px solid #66bb6a',
 										borderRadius: 0,
@@ -151,33 +138,6 @@ function TournamentStandings(props) {
 									}}
 								>
 									Standings
-								</MuiButton>
-								<MuiButton
-									component={Link}
-									to={`/tournament-join-requests/${tournamentId}`}
-									variant="text"
-									style={{
-										borderRadius: 0,
-										border: 'none',
-										backgroundColor: 'transparent',
-										color: 'white'
-									}}
-								>
-									Join Requests
-								</MuiButton>
-								<MuiButton
-									component={Link}
-									to={`/tournament-prizes/${tournamentId}`}
-									variant="text"
-									className="ms-2"
-									style={{
-										borderRadius: 0,
-										border: 'none',
-										backgroundColor: 'transparent',
-										color: 'white'
-									}}
-								>
-									Prizes
 								</MuiButton>
 							</ButtonGroup>
 						</div>
