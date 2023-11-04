@@ -17,19 +17,11 @@ import Team from 'pages/team';
 import TournamentPlayers from 'pages/tournamentPlayers';
 import TournamentRounds from 'pages/tournamentRounds';
 import TournamentStandings from 'pages/tournamentStandings';
-import TournamentJoinRequests from 'pages/tournamentJoinRequests';
-import TournamentPrizes from 'pages/tournamentPrizes';
 import Tournaments from 'pages/tournaments';
-
-import { DappProvider } from "@multiversx/sdk-dapp/wrappers/DappProvider";
-import { NotificationModal, SignTransactionsModals, TransactionsToastList } from "@multiversx/sdk-dapp/UI";
-import { networkId} from "config/customConfig";
-import { networkConfig } from "config/networks";
 
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {firebaseApp} from "./config/firebase";
 import {readMyDefaultClub} from "utils/firebaseTools";
-import PostsComponent from 'pages/PostsComponent';
 
 const lightTheme = createTheme();
 const darkTheme = createTheme({
@@ -39,9 +31,6 @@ const darkTheme = createTheme({
 });
 
 function App() {
-  // Set the config network
-  const customNetConfig = networkConfig[networkId];
-
   // Theme options
   const [theme, setTheme] = useState('dark');
   const handleThemeChange = (newTheme) => {
@@ -53,11 +42,13 @@ function App() {
 
   //firebase user data
   const [firebaseUser, setFirebaseUser] = useState(null);
+  const [authStateLoaded, setAuthStateLoaded] = useState(false);
   useEffect(() => {
     const auth = getAuth(firebaseApp);
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setFirebaseUser(user);
+      setAuthStateLoaded(true);
     });
     return () => unsubscribe();
   }, []);
@@ -66,23 +57,25 @@ function App() {
   const getMyDefaultClub = async () => {
     return await readMyDefaultClub(firebaseUser?.uid);
   };
-
+//sd
   return (
-    <DappProvider
-      environment={customNetConfig.id}
-      customNetworkConfig={customNetConfig}
-      dappConfig={{ shouldUseWebViewProvider: true }}
-      completedTransactionsDelay={200}
-    >
       <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
         <CssBaseline />
-        <TransactionsToastList />
-        <NotificationModal />
-        <SignTransactionsModals />
         <Router>
           <CustomNavbar theme={theme} handleThemeChange={handleThemeChange} isMobile={isMobile} firebaseUser={firebaseUser ? firebaseUser: null}/>
           <Routes>
-            <Route path="/" element={<Navigate to={`/home/${firebaseUser?.uid}`} firebaseUser={firebaseUser}/>} />
+            <Route
+              path="/"
+              element={
+                authStateLoaded ? (
+                  firebaseUser ? (
+                    <Navigate to={`/home/${firebaseUser.uid}`} />
+                  ) : (
+                    <Navigate to="/home/undefined" />
+                  )
+                ) : null
+              }
+            />
             <Route path="/about-us" element={<About />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/home/:userId" element={<Home firebaseUser={firebaseUser} />} />
@@ -95,13 +88,10 @@ function App() {
             <Route path="/tournament-players/:tournamentId" element={<TournamentPlayers isMobile={isMobile} firebaseUser={firebaseUser} getMyDefaultClub={getMyDefaultClub}/>} />
             <Route path="/tournament-rounds/:tournamentId/:activeRoundId" element={<TournamentRounds isMobile={isMobile} firebaseUser={firebaseUser} getMyDefaultClub={getMyDefaultClub}/>} />
             <Route path="/tournament-standings/:tournamentId" element={<TournamentStandings isMobile={isMobile} firebaseUser={firebaseUser} getMyDefaultClub={getMyDefaultClub}/>} />
-            <Route path="/tournament-join-requests/:tournamentId" element={<TournamentJoinRequests isMobile={isMobile} firebaseUser={firebaseUser} getMyDefaultClub={getMyDefaultClub}/>} />
-            <Route path="/tournament-prizes/:tournamentId" element={<TournamentPrizes isMobile={isMobile} firebaseUser={firebaseUser} getMyDefaultClub={getMyDefaultClub}/>} />
             <Route path="/tournaments" element={<Tournaments isMobile={isMobile} firebaseUser={firebaseUser} getMyDefaultClub={getMyDefaultClub}/>} />
           </Routes>
         </Router>
       </ThemeProvider>
-    </DappProvider>
   );
 }
 

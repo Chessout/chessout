@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { AppBar, Toolbar, IconButton, Typography, List, ListItem, ListItemText } from '@mui/material';
-import { DarkMode, LightMode, ContentCopy, Check, Menu as MenuIcon } from '@mui/icons-material';
+import { DarkMode, LightMode, Menu as MenuIcon } from '@mui/icons-material';
 import { Home as HomeIcon } from '@mui/icons-material';
 import InfoIcon from '@mui/icons-material/Info';
 import StarRateIcon from '@mui/icons-material/StarRate';
@@ -18,9 +18,6 @@ import "assets/css/navbar.css";
 import "assets/css/globals.css";
 import {getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import {firebaseApp} from "config/firebase";
-import { ExtensionLoginButton, WalletConnectLoginButton, LedgerLoginButton, WebWalletLoginButton, } from "@multiversx/sdk-dapp/UI";
-import { useGetAccountInfo } from "@multiversx/sdk-dapp/hooks/account";
-import {logout} from "@multiversx/sdk-dapp/utils";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import toast from 'react-hot-toast';
@@ -73,7 +70,9 @@ function CustomNavbar(props) {
   const handleSignInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(authInstance, provider);
+      const result = await signInWithPopup(authInstance, provider);
+      const user = result.user;
+      navigate(`/home/${user?.uid}`);
     } catch (error) {
       console.error(error);
     }
@@ -90,31 +89,6 @@ function CustomNavbar(props) {
       console.error('Error signing out:', error);
     }
   };
-
-  // Multiversx account info
-  const { address, account } = useGetAccountInfo();
-
-  //Copy to Clipboard Utility
-  const [isCopied, setIsCopied] = React.useState(false);
-  function CopyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(r => {
-      // then branch
-    });
-    setIsCopied(true);
-    toast.success(
-      "Address Copied",
-      {
-        position: 'top-right',
-        duration: 1500,
-        style: {
-          border: '1px solid green'
-        }
-      }
-    );
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 1500);
-  }
 
   // Menu drawer item function
   const handleHomeClick = (route) => {
@@ -226,81 +200,10 @@ function CustomNavbar(props) {
               </div>
             </>
           )}
-          {/*<Divider color={"white"} style={{width: '115%', marginLeft: '-10%'}} className="mt-3"/>*/}
-          {/*{address ? (*/}
-          {/*  <>*/}
-          {/*    <p className="text-center h5 mt-3">MultiversX Account:</p>*/}
-          {/*    <div className="d-flex justify-content-center">*/}
-          {/*      <p className="font-size-sm font-lighter">*/}
-          {/*        {address.slice(0, 17)} ... {address.slice(50, 62)}*/}
-          {/*      </p>*/}
-          {/*      {!isCopied ? (*/}
-          {/*        <Button*/}
-          {/*          variant="link"*/}
-          {/*          onClick={() => CopyToClipboard(address)}*/}
-          {/*          className="text-white m-t-n-sm"*/}
-          {/*        >*/}
-          {/*          <ContentCopy fontSize="10px" style={{marginTop: '-10px'}}/>*/}
-          {/*        </Button>*/}
-          {/*      ) : (*/}
-          {/*        <Button variant="link" className="text-white m-t-n-sm">*/}
-          {/*          <Check fontSize="10px" style={{marginTop: '-10px'}}/>*/}
-          {/*        </Button>*/}
-          {/*      )}*/}
-          {/*    </div>*/}
-          {/*    <div className="d-flex justify-content-center">*/}
-          {/*      <Button*/}
-          {/*        size="sm"*/}
-          {/*        variant={"light"}*/}
-          {/*        onClick={() => logout()}*/}
-          {/*        className="mb-2 btn-block b-r-xs font-size-xs"*/}
-          {/*      >*/}
-          {/*        Sign out*/}
-          {/*      </Button>*/}
-          {/*    </div>*/}
-          {/*  </>*/}
-          {/*):(*/}
-          {/*  <>*/}
-          {/*    <p className="text-center h5 mt-2">MultiversX Login:</p>*/}
-          {/*    <div className="d-flex justify-content-center mt-2">*/}
-          {/*      <WebWalletLoginButton*/}
-          {/*        callbackRoute="/home"*/}
-          {/*        nativeAuth={true}*/}
-          {/*        loginButtonText="Web wallet"*/}
-          {/*        className="btn btn-sm btn-light b-r-xs font-size-xs btn-block"*/}
-          {/*      />*/}
-          {/*    </div>*/}
-          {/*    <div className="d-flex justify-content-center w-auto">*/}
-          {/*      <LedgerLoginButton*/}
-          {/*        callbackRoute="/home"*/}
-          {/*        loginButtonText="Ledger"*/}
-          {/*        nativeAuth={true}*/}
-          {/*        className="btn btn-sm btn-light b-r-xs font-size-xs btn-block"*/}
-          {/*      />*/}
-          {/*    </div>*/}
-          {/*    <div className="d-flex justify-content-center">*/}
-          {/*      <WalletConnectLoginButton*/}
-          {/*        callbackRoute="/home"*/}
-          {/*        nativeAuth={true}*/}
-          {/*        loginButtonText={"xPortal App"}*/}
-          {/*        isWalletConnectV2={true}*/}
-          {/*        className="btn btn-sm btn-light b-r-xs font-size-xs btn-block"*/}
-          {/*      />*/}
-          {/*    </div>*/}
-          {/*    <div className="d-flex justify-content-center">*/}
-          {/*      <ExtensionLoginButton*/}
-          {/*        callbackRoute="/home"*/}
-          {/*        nativeAuth={true}*/}
-          {/*        loginButtonText="Extension"*/}
-          {/*        className="btn btn-sm btn-light b-r-xs font-size-xs btn-block"*/}
-          {/*      />*/}
-          {/*    </div>*/}
-          {/*  </>*/}
-          {/*)}*/}
         </div>
       </SwipeableDrawer>
 
-      {/* Login drawer content*/}
+      {/* Menu drawer content*/}
       <SwipeableDrawer
         anchor="left"
         open={isMenuDrawerOpen}
