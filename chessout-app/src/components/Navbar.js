@@ -106,7 +106,7 @@ function CustomNavbar(props) {
         setDefaultClub(r);
       })
     }
-  }, []);
+  }, [props.firebaseUser]);
 
   return (
     <>
