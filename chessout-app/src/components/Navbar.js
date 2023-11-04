@@ -98,13 +98,15 @@ function CustomNavbar(props) {
 
   const [defaultClub, setDefaultClub] = useState(null);
   useEffect(()=>{
-    const getClub = async () => {
-      return await props.getMyDefaultClub();
+    if(props.firebaseUser){
+      const getClub = async () => {
+        return await props.getMyDefaultClub();
+      };
+      getClub().then((r) => {
+        setDefaultClub(r);
+      })
     }
-    getClub().then((r) => {
-      setDefaultClub(r);
-    })
-  }, [])
+  }, []);
 
   return (
     <>
