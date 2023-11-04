@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { AppBar, Toolbar, IconButton, Typography, List, ListItem, ListItemText } from '@mui/material';
 import { DarkMode, LightMode, Menu as MenuIcon } from '@mui/icons-material';
 import { Home as HomeIcon } from '@mui/icons-material';
@@ -95,6 +95,16 @@ function CustomNavbar(props) {
     navigate(route);
     toggleMenuDrawer(false);
   };
+
+  const [defaultClub, setDefaultClub] = useState(null);
+  useEffect(()=>{
+    const getClub = async () => {
+      return await props.getMyDefaultClub();
+    }
+    getClub().then((r) => {
+      setDefaultClub(r);
+    })
+  }, [])
 
   return (
     <>
@@ -256,7 +266,7 @@ function CustomNavbar(props) {
               </ListItemButton>
             </ListItem>
             <ListItem key="tournaments" disablePadding>
-              <ListItemButton onClick={() => handleHomeClick('/tournaments')}>
+              <ListItemButton onClick={() => handleHomeClick(`/tournaments/${defaultClub?.clubKey}`)}>
                 <ListItemIcon> <EmojiEventsIcon /> </ListItemIcon>
                 <ListItemText primary="Tournaments"/>
               </ListItemButton>

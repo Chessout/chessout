@@ -14,19 +14,16 @@ import TableRow from '@mui/material/TableRow';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 function TournamentPlayers(props) {
-	const { tournamentId } = useParams();
+	const { clubId, tournamentId } = useParams();
 	const storage = getStorage(firebaseApp);
 	const [tournament, setTournament] = useState(null);
-	const [defaultClubInfo, setDefaultClubInfo] = useState([]);
 
 	//Get tournament
 	const getMyTournament = async () => {
-		const defaultClub = await props.getMyDefaultClub();
-		setDefaultClubInfo(defaultClub);
-		const myTournamentData = await getTournament(defaultClub?.clubKey, tournamentId);
+		const myTournamentData = await getTournament(clubId, tournamentId);
 
 		// tournament players
-		const tournamentPlayers = await getTournamentPlayers(defaultClub?.clubKey, tournamentId);
+		const tournamentPlayers = await getTournamentPlayers(clubId, tournamentId);
 		const tournamentPlayersArray = tournamentPlayers ? Object.values(tournamentPlayers) : [];
 		const tournamentPlayersCount = tournamentPlayers ? Object.keys(tournamentPlayers).length : 0;
 		const tournamentPlayersDetails = await Promise.all(tournamentPlayersArray.map(async (player) => {
@@ -92,7 +89,7 @@ function TournamentPlayers(props) {
 								</MuiButton>
 								<MuiButton
 									component={Link}
-									to={`/tournament-rounds/${tournamentId}/0`}
+									to={`/tournament-rounds/${clubId}/${tournamentId}/0`}
 									variant="text"
 									style={{
 										borderRadius: 0,
@@ -105,7 +102,7 @@ function TournamentPlayers(props) {
 								</MuiButton>
 								<MuiButton
 									component={Link}
-									to={`/tournament-standings/${tournamentId}`}
+									to={`/tournament-standings/${clubId}/${tournamentId}`}
 									variant="text"
 									className="ms-2"
 									style={{

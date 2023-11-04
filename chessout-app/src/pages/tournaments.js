@@ -8,7 +8,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Fade from "@mui/material/Fade";
 import DefaultClubImage from 'assets/images/default_chess_club.jpg';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
-import { Link } from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 
 const componentsProps={
 	tooltip: {
@@ -33,6 +33,7 @@ const componentsProps={
 };
 
 function Tournaments(props) {
+	const { clubId } = useParams();
 	const storage = getStorage(firebaseApp);
 	const currentTimestamp = Date.now();
 	const reversedTimestamp = 0 - currentTimestamp;
@@ -41,14 +42,12 @@ function Tournaments(props) {
 
 	//Get tournaments
 	const getMyTournaments = async () => {
-		const defaultClub = await props.getMyDefaultClub();
-		setDefaultClubInfo(defaultClub);
-		const myTournamentsData = await getTournaments(defaultClub?.clubKey);
+		const myTournamentsData = await getTournaments(clubId);
 		const myTournamentsArray = myTournamentsData ? Object.values(myTournamentsData) : [];
 
 		//get the image of club
 		let clubImage = null;
-		const clubImageData = await getClubProfilePicture(defaultClub?.clubKey);
+		const clubImageData = await getClubProfilePicture(clubId);
 		if (clubImageData?.uploadComplete) {
 			clubImage = await getDownloadURL(ref(storage, clubImageData.stringUri));
 		}else{
@@ -58,7 +57,7 @@ function Tournaments(props) {
 		const tournamentsWithDetails = await Promise.all(myTournamentsArray.map(async (tournament) => {
 			//get club extra info
 			const clubInfo = await getClub(tournament.clubId);
-			const tournamentPlayers = await getTournamentPlayers(defaultClub?.clubKey, tournament.tournamentId);
+			const tournamentPlayers = await getTournamentPlayers(clubId, tournament.tournamentId);
 			const tournamentPlayersCount = tournamentPlayers ? Object.keys(tournamentPlayers).length : 0;
 
 			return {
@@ -114,7 +113,7 @@ function Tournaments(props) {
 												<Typography>{tournament.totalRounds}</Typography>
 											</Col>
 											<Col xs={12} lg={1} className={`text-center`}>
-												<Link to={`/tournament-players/${tournament.tournamentId}`}>
+												<Link to={`/tournament-players/${clubId}/${tournament.tournamentId}`}>
 													<Tooltip key="details" title="View more details" arrow placement="bottom" componentsProps={componentsProps}>
 														<IconButton aria-label="details" size="small" className="text-light">
 															{props.isMobile ? 'More details' : ''} <DoubleArrowIcon fontSize="small" />

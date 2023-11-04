@@ -15,7 +15,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Carousel from 'react-bootstrap/Carousel';
 
 function TournamentStandings(props) {
-	const { tournamentId } = useParams();
+	const { clubId, tournamentId } = useParams();
 	const storage = getStorage(firebaseApp);
 	const [tournament, setTournament] = useState(null);
 	const [standings, setStandings] = useState(null);
@@ -23,22 +23,21 @@ function TournamentStandings(props) {
 
 	//Get tournament
 	const getMyTournament = async () => {
-		const defaultClub = await props.getMyDefaultClub();
-		const myTournamentData = await getTournament(defaultClub?.clubKey, tournamentId);
+		const myTournamentData = await getTournament(clubId, tournamentId);
 
 		// get tournament players
-		const tournamentPlayers = await getTournamentPlayers(defaultClub?.clubKey, tournamentId);
+		const tournamentPlayers = await getTournamentPlayers(clubId, tournamentId);
 		myTournamentData.playersCount = tournamentPlayers ? Object.keys(tournamentPlayers).length : 0;
 
 		// get tournament standings
 		const standingsInfo = [];
 		for (let j = 1; j <= myTournamentData?.totalRounds; j++){
-			const tournamentRoundGamesDecodedData = await getTournamentRoundGamesDecoded(defaultClub?.clubKey, tournamentId, j);
+			const tournamentRoundGamesDecodedData = await getTournamentRoundGamesDecoded(clubId, tournamentId, j);
 			if (tournamentRoundGamesDecodedData) {
 
 				const roundStandings = [];
 				for (let k = 1; k <= myTournamentData?.playersCount; k++){
-					const tournamentStandings = await getTournamentStandings(defaultClub?.clubKey, tournamentId, j, k);
+					const tournamentStandings = await getTournamentStandings(clubId, tournamentId, j, k);
 					if(tournamentStandings){
 						tournamentStandings.playerImage = tournamentStandings?.profilePictureUri ? await getDownloadURL(ref(storage, tournamentStandings.profilePictureUri)) : null;
 						roundStandings.push(tournamentStandings);
@@ -103,7 +102,7 @@ function TournamentStandings(props) {
 									component={Link}
 									variant="text"
 									className="me-2"
-									to={`/tournament-players/${tournamentId}`}
+									to={`/tournament-players/${clubId}/${tournamentId}`}
 									style={{
 										borderRadius: 0,
 										border: 'none',
@@ -115,7 +114,7 @@ function TournamentStandings(props) {
 								</MuiButton>
 								<MuiButton
 									component={Link}
-									to={`/tournament-rounds/${tournamentId}/0`}
+									to={`/tournament-rounds/${clubId}/${tournamentId}/0`}
 									variant="text"
 									style={{
 										borderRadius: 0,

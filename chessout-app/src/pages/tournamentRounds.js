@@ -80,21 +80,20 @@ function roundResultTooltips(result, whitePlayerName, blackPlayerName){
 }
 
 function TournamentRounds(props) {
-	const { tournamentId, activeRoundId } = useParams();
+	const { clubId, tournamentId, activeRoundId } = useParams();
 	const storage = getStorage(firebaseApp);
 	const [tournament, setTournament] = useState(null);
 	const [rounds, setRounds] = useState(null);
 
 	//Get tournament
 	const getMyTournament = async () => {
-		const defaultClub = await props.getMyDefaultClub();
-		const myTournamentData = await getTournament(defaultClub?.clubKey, tournamentId);
+		const myTournamentData = await getTournament(clubId, tournamentId);
 
 		const roundsInfo = [];
 		for (let i = 1; i <= myTournamentData?.totalRounds; i++) {
-			const tournamentRoundGamesDecodedData = await getTournamentRoundGamesDecoded(defaultClub?.clubKey, tournamentId, i);
+			const tournamentRoundGamesDecodedData = await getTournamentRoundGamesDecoded(clubId, tournamentId, i);
 			if (tournamentRoundGamesDecodedData) {
-				const tournamentRoundGames = await getTournamentRoundGames(defaultClub?.clubKey, tournamentId, i);
+				const tournamentRoundGames = await getTournamentRoundGames(clubId, tournamentId, i);
 
 				const roundsGamesResults = [];
 				for (const result of tournamentRoundGames) {
@@ -161,7 +160,7 @@ function TournamentRounds(props) {
 							>
 								<MuiButton
 									component={Link}
-									to={`/tournament-players/${tournamentId}`}
+									to={`/tournament-players/${clubId}/${tournamentId}`}
 									variant="text"
 									className="me-2"
 									style={{
@@ -187,7 +186,7 @@ function TournamentRounds(props) {
 								</MuiButton>
 								<MuiButton
 									component={Link}
-									to={`/tournament-standings/${tournamentId}`}
+									to={`/tournament-standings/${clubId}/${tournamentId}`}
 									variant="text"
 									className="ms-2"
 									style={{
