@@ -1,6 +1,3 @@
-
-
-
 ## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -34,7 +31,36 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 # my notes
 
-## deploy
+# deploy next
+
+```yaml
+# next js app.yaml file
+env: standard
+runtime: nodejs18
+service: web-app
+handlers:
+  - url: /.*
+    secure: always
+    script: auto
+```
+
+## deploy react
+
+```yaml
+env: standard
+runtime: nodejs18
+handlers:
+  # Serve all static files with url ending with a file extension
+  - url: /(.*\..+)$
+    static_files: build/\1
+    upload: build/(.*\..+)$
+  # Catch all handler to index.html
+  - url: /.*
+    static_files: build/index.html
+    upload: build/index.html
+```
+
+### deploy workflow
 
 ```bash
 # show current gcloud project
