@@ -37,6 +37,9 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 ## deploy
 
 ```bash
+# show current gcloud project
+gcloud config get-value project
+
 # set project
 gcloud config set project chess-out-v2
 
