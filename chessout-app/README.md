@@ -49,6 +49,7 @@ handlers:
 ```yaml
 env: standard
 runtime: nodejs18
+service: web-app
 handlers:
   # Serve all static files with url ending with a file extension
   - url: /(.*\..+)$
