@@ -22,11 +22,15 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import toast from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
+import {useApp} from "../components/context";
 
 
 function CustomNavbar(props) {
   // Dark Theme constant
-  const isDarkTheme = props.theme === 'dark';
+  const { firebaseUser, theme, handleThemeChange, isMobile } = useApp();
+  const isDarkTheme = theme === 'dark';
+
+
 
   // Page name
   const location = useLocation();
@@ -98,7 +102,7 @@ function CustomNavbar(props) {
 
   const [defaultClub, setDefaultClub] = useState(null);
   useEffect(()=>{
-    if(props.firebaseUser){
+    if(firebaseUser){
       const getClub = async () => {
         return await props.getMyDefaultClub();
       };
@@ -106,7 +110,7 @@ function CustomNavbar(props) {
         setDefaultClub(r);
       })
     }
-  }, [props.firebaseUser]);
+  }, [firebaseUser]);
 
   return (
     <>
@@ -120,7 +124,7 @@ function CustomNavbar(props) {
           >
             <MenuIcon />
           </Button>
-          <Link to={`/home/${props.firebaseUser?.uid}`}>
+          <Link to={`/home/${firebaseUser?.uid}`}>
             <img className="navbar-logo" src={ImageLogo} alt="Logo" />
           </Link>
           <Typography
@@ -128,7 +132,7 @@ function CustomNavbar(props) {
             style={{
               textDecoration: 'none',
               color: 'inherit',
-              display: props.isMobile ? 'none' : 'flex',
+              display: isMobile ? 'none' : 'flex',
               flexGrow: 50,
               justifyContent: 'center',
             }}
@@ -139,7 +143,7 @@ function CustomNavbar(props) {
           <div style={{ flexGrow: 1 }} />
 
           {/* Show Login / my account if the user is logged out / logged in */}
-          {props.firebaseUser ? (
+          {firebaseUser ? (
             <Button
               variant={isDarkTheme ? 'outline-light' : 'outline-dark'}
               size="sm"
@@ -161,7 +165,7 @@ function CustomNavbar(props) {
 
           <IconButton
             color="inherit"
-            onClick={() => props.handleThemeChange(isDarkTheme ? 'light' : 'dark')}
+            onClick={() => handleThemeChange(isDarkTheme ? 'light' : 'dark')}
           >
             {isDarkTheme ? <LightMode /> : <DarkMode />}
           </IconButton>
@@ -182,10 +186,10 @@ function CustomNavbar(props) {
           className="px-3"
           style={{minWidth: '300px'}}
         >
-          {props.firebaseUser ? (
+          {firebaseUser ? (
             <>
               <p className="text-center h5 mt-3">Account Details:</p>
-              <p className="text-center mt-2">{props.firebaseUser.email}</p>
+              <p className="text-center mt-2">{firebaseUser.email}</p>
               <div className="d-flex justify-content-center">
                 <Button
                   size="sm"
@@ -232,7 +236,7 @@ function CustomNavbar(props) {
           <p className=" h5 mt-3">Menu</p>
           <List>
             <ListItem key="home" disablePadding>
-              <ListItemButton onClick={() => handleHomeClick(`/home/${props.firebaseUser?.uid}`)}>
+              <ListItemButton onClick={() => handleHomeClick(`/home/${firebaseUser?.uid}`)}>
                 <ListItemIcon> <HomeIcon /> </ListItemIcon>
                 <ListItemText primary="Home" />
               </ListItemButton>

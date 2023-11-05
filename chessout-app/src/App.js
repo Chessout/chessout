@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, CssBaseline, useMediaQuery } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
 import CustomNavbar from 'components/Navbar';
 import "assets/css/globals.css";
 
@@ -22,21 +20,10 @@ import Tournaments from 'pages/tournaments';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {firebaseApp} from "./config/firebase";
 import {readMyDefaultClub} from "utils/firebaseTools";
-
-const lightTheme = createTheme();
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark'
-  },
-});
+import { AppProvider} from "./components/context";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 function App() {
-  // Theme options
-  const [theme, setTheme] = useState('dark');
-  const handleThemeChange = (newTheme) => {
-    setTheme(newTheme);
-  };
-
   // Check if the screen is mobile
   const isMobile = useMediaQuery('(max-width:600px)');
 
@@ -57,12 +44,11 @@ function App() {
   const getMyDefaultClub = async () => {
     return await readMyDefaultClub(firebaseUser?.uid);
   };
-//sd
+
   return (
-      <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
-        <CssBaseline />
+      <AppProvider>
         <Router>
-          <CustomNavbar theme={theme} handleThemeChange={handleThemeChange} isMobile={isMobile} firebaseUser={firebaseUser ? firebaseUser: null} getMyDefaultClub={getMyDefaultClub}/>
+          <CustomNavbar getMyDefaultClub={getMyDefaultClub}/>
           <Routes>
             <Route
               path="/"
@@ -78,20 +64,20 @@ function App() {
             />
             <Route path="/about-us" element={<About />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/home/:userId" element={<Home firebaseUser={firebaseUser} />} />
+            <Route path="/home/:userId" element={<Home />} />
             <Route path="/followed-players" element={<FollowedPlayers />} />
             <Route path="/my-club" element={<MyClub />} />
-            <Route path="/my-clubs" element={<MyClubs firebaseUser={firebaseUser} />} />
+            <Route path="/my-clubs" element={<MyClubs />} />
             <Route path="/my-profile" element={<MyProfile />} />
             <Route path="/club-players" element={<ClubPlayers />} />
             <Route path="/team" element={<Team />} />
-            <Route path="/tournament-players/:clubId/:tournamentId" element={<TournamentPlayers isMobile={isMobile} firebaseUser={firebaseUser} getMyDefaultClub={getMyDefaultClub}/>} />
-            <Route path="/tournament-rounds/:clubId/:tournamentId/:activeRoundId" element={<TournamentRounds isMobile={isMobile} firebaseUser={firebaseUser} getMyDefaultClub={getMyDefaultClub}/>} />
-            <Route path="/tournament-standings/:clubId/:tournamentId" element={<TournamentStandings isMobile={isMobile} firebaseUser={firebaseUser} getMyDefaultClub={getMyDefaultClub}/>} />
-            <Route path="/tournaments/:clubId" element={<Tournaments isMobile={isMobile} firebaseUser={firebaseUser} getMyDefaultClub={getMyDefaultClub}/>} />
+            <Route path="/tournament-players/:clubId/:tournamentId" element={<TournamentPlayers getMyDefaultClub={getMyDefaultClub}/>} />
+            <Route path="/tournament-rounds/:clubId/:tournamentId/:activeRoundId" element={<TournamentRounds getMyDefaultClub={getMyDefaultClub}/>} />
+            <Route path="/tournament-standings/:clubId/:tournamentId" element={<TournamentStandings getMyDefaultClub={getMyDefaultClub}/>} />
+            <Route path="/tournaments/:clubId" element={<Tournaments getMyDefaultClub={getMyDefaultClub}/>} />
           </Routes>
         </Router>
-      </ThemeProvider>
+      </AppProvider>
   );
 }
 

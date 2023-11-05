@@ -6,13 +6,15 @@ import { Typography, Paper, Grid, Box } from '@mui/material';
 import {firebaseApp} from "config/firebase";
 import ClubImage from 'assets/images/default_chess_club.jpg';
 import Divider from "@mui/material/Divider";
+import {useApp} from "../components/context";
 
 function MyClubs(props) {
 	const storage = getStorage(firebaseApp);
+	const { firebaseUser, theme } = useApp();
 	const [clubs, setClubs] = useState([]);
 
 	const getMyClubs = async () => {
-		const myClubs = await readMyClubs({ uid: props.firebaseUser.uid });
+		const myClubs = await readMyClubs({ uid: firebaseUser.uid });
 
 		// Create a new array of clubs with img_src added
 		const clubsWithImgSrc = await Promise.all(myClubs.map(async (club) => {
@@ -37,10 +39,10 @@ function MyClubs(props) {
 	};
 
 	useEffect(() => {
-		if(props.firebaseUser){
+		if(firebaseUser){
 			getMyClubs();
 		}
-	}, [props.firebaseUser]);
+	}, [firebaseUser]);
 
 	return (
 		<Container className="mt-3 mb-5">

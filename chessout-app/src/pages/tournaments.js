@@ -9,6 +9,7 @@ import Fade from "@mui/material/Fade";
 import DefaultClubImage from 'assets/images/default_chess_club.jpg';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import {Link, useParams} from 'react-router-dom';
+import {useApp} from "../components/context";
 
 const componentsProps={
 	tooltip: {
@@ -34,6 +35,7 @@ const componentsProps={
 
 function Tournaments(props) {
 	const { clubId } = useParams();
+	const { firebaseUser, theme, isMobile } = useApp();
 	const storage = getStorage(firebaseApp);
 	const currentTimestamp = Date.now();
 	const reversedTimestamp = 0 - currentTimestamp;
@@ -72,10 +74,10 @@ function Tournaments(props) {
 	};
 
 	useEffect(() => {
-		if (props.firebaseUser) {
+		if (firebaseUser) {
 			getMyTournaments();
 		}
-	}, [props.firebaseUser]);
+	}, [firebaseUser]);
 
 	return(
 		<>
@@ -92,23 +94,23 @@ function Tournaments(props) {
 													C
 												</Avatar>
 											</Col>
-											<Col xs={12} lg={2} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center'}`}>
+											<Col xs={12} lg={2} className={`border-start ${isMobile ? 'mt-3' : 'text-center'}`}>
 												<Typography className="text-green-400" variant="caption" >Club Name</Typography>
 												<Typography>{tournament.clubInfo?.name}</Typography>
 											</Col>
-											<Col xs={12} lg={3} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center'}`}>
+											<Col xs={12} lg={3} className={`border-start ${isMobile ? 'mt-3' : 'text-center'}`}>
 												<Typography className="text-green-400" variant="caption">Tournament Name</Typography>
 												<Typography>{tournament?.name}</Typography>
 											</Col>
-											<Col xs={12} lg={3} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center'}`}>
+											<Col xs={12} lg={3} className={`border-start ${isMobile ? 'mt-3' : 'text-center'}`}>
 												<Typography className="text-green-400" variant="caption">Location</Typography>
 												<Typography>{tournament?.location}</Typography>
 											</Col>
-											<Col xs={12} lg={1} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center'}`}>
+											<Col xs={12} lg={1} className={`border-start ${isMobile ? 'mt-3' : 'text-center'}`}>
 												<Typography className="text-green-400" variant="caption">Players</Typography>
 												<Typography>{tournament.playersCount}</Typography>
 											</Col>
-											<Col xs={12} lg={1} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center border-end'}`}>
+											<Col xs={12} lg={1} className={`border-start ${isMobile ? 'mt-3' : 'text-center border-end'}`}>
 												<Typography className="text-green-400" variant="caption">Rounds</Typography>
 												<Typography>{tournament.totalRounds}</Typography>
 											</Col>
@@ -116,7 +118,7 @@ function Tournaments(props) {
 												<Link to={`/tournament-players/${clubId}/${tournament.tournamentId}`}>
 													<Tooltip key="details" title="View more details" arrow placement="bottom" componentsProps={componentsProps}>
 														<IconButton aria-label="details" size="small" className="text-light">
-															{props.isMobile ? 'More details' : ''} <DoubleArrowIcon fontSize="small" />
+															{isMobile ? 'More details' : ''} <DoubleArrowIcon fontSize="small" />
 														</IconButton>
 													</Tooltip>
 												</Link>

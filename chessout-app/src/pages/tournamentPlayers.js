@@ -12,9 +12,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import {useApp} from "../components/context";
 
 function TournamentPlayers(props) {
 	const { clubId, tournamentId } = useParams();
+	const { firebaseUser, theme, isMobile } = useApp();
 	const storage = getStorage(firebaseApp);
 	const [tournament, setTournament] = useState(null);
 
@@ -43,10 +45,10 @@ function TournamentPlayers(props) {
 	};
 
 	useEffect(() => {
-		if (props.firebaseUser) {
+		if (firebaseUser) {
 			getMyTournament();
 		}
-	}, [props.firebaseUser]);
+	}, [firebaseUser]);
 
 	return(
 		<Container className="mt-2 mb-5">
@@ -54,15 +56,15 @@ function TournamentPlayers(props) {
 				<Col xs={12} lg={{ offset: 1, span: 10 }}>
 					<div className="p-3 b-r-sm mt-4" style={{backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))"}}>
 						<Row style={{ display: 'flex', alignItems: "center" }}>
-							<Col xs={12} lg={4} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center'}`}>
+							<Col xs={12} lg={4} className={`border-start ${isMobile ? 'mt-3' : 'text-center'}`}>
 								<Typography color={'#66bb6a'} variant="caption">Tournament Name</Typography>
 								<Typography>{tournament?.name}</Typography>
 							</Col>
-							<Col xs={12} lg={4} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center'}`}>
+							<Col xs={12} lg={4} className={`border-start ${isMobile ? 'mt-3' : 'text-center'}`}>
 								<Typography color={'#66bb6a'} variant="caption">Tournament Location</Typography>
 								<Typography>{tournament?.location}</Typography>
 							</Col>
-							<Col xs={12} lg={4} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center border-end'}`}>
+							<Col xs={12} lg={4} className={`border-start ${isMobile ? 'mt-3' : 'text-center border-end'}`}>
 								<Typography color={'#66bb6a'} variant="caption">Tournament Rounds</Typography>
 								<Typography>{tournament?.totalRounds}</Typography>
 							</Col>

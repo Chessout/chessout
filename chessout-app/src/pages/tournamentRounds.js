@@ -14,6 +14,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Carousel from 'react-bootstrap/Carousel';
+import {useApp} from "../components/context";
 
 const componentsProps={
 	tooltip: {
@@ -51,20 +52,6 @@ function roundResultWinnerColor(result){
 	}
 }
 
-function roundResultLabels(result){
-	switch (result) {
-		case 0: return (<Typography variant="body1" fontSize="20px"><span className="font-bold">---</span></Typography>);
-		case 1: return (<Typography variant="body1" fontSize="17px"><span className="text-light-success font-bold">1</span> - 0</Typography>);
-		case 2: return (<Typography variant="body1" fontSize="17px">0 - <span className="text-light-success font-bold">1</span></Typography>);
-		case 3: return (<Typography variant="body1" fontSize="15px"><span className="text-light-success">1/2 - 1/2</span></Typography>);
-		case 4: return (<Typography variant="body1" fontSize="15px"><span className="text-light-success">1(Bye)</span></Typography>);
-		case 5: return (<Typography variant="body1" fontSize="17px"><span className="text-light-success font-bold">1ff</span> - 0</Typography>);
-		case 6: return (<Typography variant="body1" fontSize="17px">0 - <span className="text-light-success font-bold">1ff</span></Typography>);
-		case 7: return (<Typography variant="body1" fontSize="17px">0ff - 0ff</Typography>);
-		case 8: return (<Typography variant="body1" fontSize="17px">1/2ff - 1/2ff</Typography>);
-	}
-}
-
 function roundResultTooltips(result, whitePlayerName, blackPlayerName){
 	switch (result) {
 		case 0: return '';
@@ -81,9 +68,24 @@ function roundResultTooltips(result, whitePlayerName, blackPlayerName){
 
 function TournamentRounds(props) {
 	const { clubId, tournamentId, activeRoundId } = useParams();
+	const { firebaseUser, theme, isMobile } = useApp();
 	const storage = getStorage(firebaseApp);
 	const [tournament, setTournament] = useState(null);
 	const [rounds, setRounds] = useState(null);
+
+	function roundResultLabels(result){
+		switch (result) {
+			case 0: return (<Typography variant="body1" fontSize="20px"><span className="font-bold">---</span></Typography>);
+			case 1: return (<Typography variant="body1" fontSize="17px"><span className="text-light-success font-bold">1</span> - 0</Typography>);
+			case 2: return (<Typography variant="body1" fontSize="17px">0 - <span className="text-light-success font-bold">1</span></Typography>);
+			case 3: return (<Typography variant="body1" fontSize={isMobile ? '12px' : '15px'}><span className="text-light-success">1/2 - 1/2</span></Typography>);
+			case 4: return (<Typography variant="body1" fontSize="15px"><span className="text-light-success">1(Bye)</span></Typography>);
+			case 5: return (<Typography variant="body1" fontSize="17px"><span className="text-light-success font-bold">1ff</span> - 0</Typography>);
+			case 6: return (<Typography variant="body1" fontSize="17px">0 - <span className="text-light-success font-bold">1ff</span></Typography>);
+			case 7: return (<Typography variant="body1" fontSize="17px">0ff - 0ff</Typography>);
+			case 8: return (<Typography variant="body1" fontSize="17px">1/2ff - 1/2ff</Typography>);
+		}
+	}
 
 	//Get tournament
 	const getMyTournament = async () => {
@@ -122,10 +124,10 @@ function TournamentRounds(props) {
 	};
 
 	useEffect(() => {
-		if (props.firebaseUser) {
+		if (firebaseUser) {
 			getMyTournament();
 		}
-	}, [props.firebaseUser]);
+	}, [firebaseUser]);
 
 	const [index, setIndex] = useState(parseInt(activeRoundId, 10));
 	const handleSelect = (selectedIndex) => {
@@ -138,15 +140,15 @@ function TournamentRounds(props) {
 				<Col xs={12} lg={{ offset: 1, span: 10 }}>
 					<div className="p-3 b-r-sm mt-4" style={{backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))"}}>
 						<Row style={{ display: 'flex', alignItems: "center" }}>
-							<Col xs={12} lg={4} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center'}`}>
+							<Col xs={12} lg={4} className={`border-start ${isMobile ? 'mt-3' : 'text-center'}`}>
 								<Typography color={'#66bb6a'} variant="caption">Tournament Name</Typography>
 								<Typography>{tournament?.name}</Typography>
 							</Col>
-							<Col xs={12} lg={4} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center'}`}>
+							<Col xs={12} lg={4} className={`border-start ${isMobile ? 'mt-3' : 'text-center'}`}>
 								<Typography color={'#66bb6a'} variant="caption">Tournament Location</Typography>
 								<Typography>{tournament?.location}</Typography>
 							</Col>
-							<Col xs={12} lg={4} className={`border-start ${props.isMobile ? 'mt-3' : 'text-center border-end'}`}>
+							<Col xs={12} lg={4} className={`border-start ${isMobile ? 'mt-3' : 'text-center border-end'}`}>
 								<Typography color={'#66bb6a'} variant="caption">Tournament Rounds</Typography>
 								<Typography>{tournament?.totalRounds}</Typography>
 							</Col>
@@ -218,7 +220,7 @@ function TournamentRounds(props) {
 														<TableRow
 															key={index2}
 														>
-															<TableCell width={props.isMobile ? '' : '45%'} align="center" style={props.isMobile ? {} : { paddingLeft: '30%' }}>
+															<TableCell width={isMobile ? '' : '45%'} align="center" style={isMobile ? {} : { paddingLeft: '30%' }}>
 															<div className="d-flex justify-content-center">
 																	{result.whitePlayerImage ? (
 																		<Avatar aria-label="player" src={result.whitePlayerImage} sx={{ width: 55, height: 55}} />
@@ -235,7 +237,7 @@ function TournamentRounds(props) {
 																	{roundResultLabels(result.result)}
 																</Tooltip>
 															</TableCell>
-															<TableCell width={props.isMobile ? '' : '45%'} align="center" style={props.isMobile ? {} : { paddingRight: '30%' }}>
+															<TableCell width={isMobile ? '' : '45%'} align="center" style={isMobile ? {} : { paddingRight: '30%' }}>
 																<div className="d-flex justify-content-center">
 																	{result.blackPlayerName ? (
 																		<div>

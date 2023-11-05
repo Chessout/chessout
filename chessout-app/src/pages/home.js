@@ -4,6 +4,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import UserPost from "../components/userPost";
 import TournamentPost from "../components/tournamentPost";
 import {Link, useParams} from 'react-router-dom';
+import {useApp} from "../components/context";
 
 function homePostsReducer(state, action) {
 	if (action.type === 'RECEIVE_POSTS') {
@@ -21,6 +22,7 @@ function homePostsReducer(state, action) {
 
 function Home(props) {
 	const { userId } = useParams();
+	const { firebaseUser, theme } = useApp();
 	const [posts, dispatchPosts] = useReducer(homePostsReducer, {});
 	let myPostsArray = posts ? Object.values(posts) : [];
 	myPostsArray.sort((a, b) => b.dateCreated.timestamp - a.dateCreated.timestamp);
@@ -55,7 +57,7 @@ function Home(props) {
 										<Col xs={12} className="mt-4">
 											<UserPost
 												post={post}
-												userId={props.firebaseUser.uid}
+												userId={firebaseUser?.uid}
 											/>
 										</Col>
 									)}
@@ -63,7 +65,7 @@ function Home(props) {
 										<Col xs={12} className="mt-4">
 											<TournamentPost
 												post={post}
-												userId={props.firebaseUser.uid}
+												userId={firebaseUser?.uid}
 												title={"New tournament created"}
 												isPairingsType={false}
 												goToLabel="View Tournament"
@@ -75,7 +77,7 @@ function Home(props) {
 										<Col xs={12} className="mt-4">
 											<TournamentPost
 												post={post}
-												userId={props.firebaseUser.uid}
+												userId={firebaseUser?.uid}
 												image={post.img_src}
 												title={`Round ${post.roundId} pairings available`}
 												isPairingsType={true}
