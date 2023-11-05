@@ -318,7 +318,7 @@ export async function getClubPlayer(clubId, playerId) {
 // functions that use firebase onValue syntax
 export function getSyncUserHomePosts(user, dispatchPosts) {
 	const postsLocation = `${USER_SETTINGS}/${user}/${USER_STREAM}/${POST_ITEMS}`;
-	const posts = query(ref(getDatabase(firebaseApp), postsLocation), limitToFirst(100));
+	const posts = query(ref(getDatabase(firebaseApp), postsLocation), limitToLast(100));
 
 	onValue(posts, (snapshot) => {
 		const data = snapshot.val();
