@@ -70,8 +70,23 @@ gcloud config get-value project
 # set project
 gcloud config set project chess-out-v2
 
+# clone in temp needed projects
+cd temp
+rm -rf chessout-security
+rm -rf chessout
+git clone git@github.com:Chessout/chessout.git
+git clone git@github.com:Chessout/chessout-security.git
+
+# install security keys
+cd chessout-security
+. load-security-commands.sh
+initChessoutSecurity
+
+
 # build
+cd ../chessout/chessout-app
 rm -rf ./build
+npm install
 npm run build
 
 # remove all but build folder and app.yaml file
@@ -85,6 +100,7 @@ rm -rf public
 rm -rf src
 rm .gcloudignore
 rm .gitignore
+rm .env
 
 # deploy
 gcloud app deploy
