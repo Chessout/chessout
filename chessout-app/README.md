@@ -47,6 +47,18 @@ gcloud config set project chess-out-v2
 rm -rf ./build
 npm run build
 
+# remove all but build folder and app.yaml file
+rm -rf future-next
+rm -rf node_modules
+rm package-lock.json
+rm README.md
+rm jsconfig.json
+rm package.json
+rm -rf public
+rm -rf src
+rm .gcloudignore
+rm .gitignore
+
 # deploy
 gcloud app deploy
 ```
