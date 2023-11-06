@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-    implementation 'eu.chessout:shared:0.0.01'
+    implementation 'eu.chessout:shared:0.0.03'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'eu.chesdata:chess-pairing:1.5-SNAPSHOT'

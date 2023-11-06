@@ -14,7 +14,8 @@ public class Constants {
      * production: "https://chess-out-v2.appspot.com/"
      * localhost: "http://192.168.1.37:8080/"
      */
-    public static final String API_URL = "https://chess-out-v2.appspot.com/";
+    //public static final String API_URL = "https://chess-out-v2.appspot.com/";
+    public static final String API_URL = "https://backend-dot-chess-out-v2.appspot.com/";
     public static final Boolean IS_IN_DEBUG_MODE = false;
 
 
