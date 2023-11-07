@@ -174,7 +174,7 @@ export async function getTournamentPlayers(clubId, tournamentId) {
 	}
 }
 
-function decodeGames(games) {
+export function decodeGames(games) {
 	let totalGames = 0;
 	let completedGames = 0;
 
@@ -469,3 +469,39 @@ export function getSyncTournaments(clubId, setData) {
 		}
 	});
 }
+
+export async function getSyncTournamentRoundGames(clubId, tournamentId, roundId, setData) {
+	const LOCATION_ROUND_GAMES = `${TOURNAMENT_ROUNDS}/${clubId}/${tournamentId}/${roundId}/${GAMES}`;
+	const roundData = query(ref(getDatabase(firebaseApp), LOCATION_ROUND_GAMES));
+
+	onValue(roundData, (snapshot) => {
+		const data = snapshot.val();
+		if(data){
+			const dataArray = Object.values(data);
+			setData(dataArray);
+		}
+	});
+}
+
+export async function getSyncTournamentPlayerImages(clubId, tournamentId, setData) {
+	const LOCATION_TOURNAMENT_PLAYERS = `${TOURNAMENT_PLAYERS}/${clubId}/${tournamentId}`;
+	const tournamentPlayersData = query(
+		ref(getDatabase(firebaseApp), LOCATION_TOURNAMENT_PLAYERS)
+	);
+
+	onValue(tournamentPlayersData, async (snapshot) => {
+		const data = snapshot.val();
+		if (data) {
+			const imagePromises = Object.values(data)
+				.filter((item) => item.profilePictureUri)
+				.map(async (item) => {
+					item.image = await getDownloadURL(refStorage(storage, item.profilePictureUri));
+				});
+
+			await Promise.all(imagePromises);
+
+			setData(data);
+		}
+	});
+}
+
