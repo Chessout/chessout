@@ -1,21 +1,6 @@
-import React, {useEffect, useReducer, useState} from 'react';
-import { Avatar, CardHeader, CardContent, Card, CardActions, IconButton } from "@mui/material";
-import {Button} from  "@mui/material"
-import { Collapse } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import Divider from "@mui/material/Divider";
-import Tooltip from "@mui/material/Tooltip";
-import Fade from "@mui/material/Fade";
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import EventNoteIcon from '@mui/icons-material/EventNote';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import GroupIcon from '@mui/icons-material/Group';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import React from 'react';
+import {Button} from  "@mui/material";
 import { Container, Row, Col, Image } from "react-bootstrap";
-import { Grid, Typography, Paper } from '@mui/material';
 
 import {useApp} from "../components/context";
 import Horse from '../assets/images/horse.png';
