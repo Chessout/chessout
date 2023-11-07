@@ -143,27 +143,29 @@ const TournamentPost = ({post, userId, title,  isPairingsType,  goToLink, goToLa
 			<Divider color={"#2f2f2f"} />
 			<div className="" style={{ backgroundColor: theme === 'dark' ? '#2f2f2f' : 'white' }}>
 				<CardContent style={{paddingLeft: '50px', paddingRight: '50px'}}>
-					<div className="d-flex justify-content-between mb-2">
-						<Typography><EventNoteIcon fontSize="small" style={{marginTop: '-5px', color: '#198754'}}/> Name</Typography>
-						<Typography>{tournament?.name}</Typography>
-					</div>
-					<Divider color={"grey"} />
-					<div className="d-flex justify-content-between mt-2 mb-2">
-						<Typography><LocationOnOutlinedIcon fontSize="small" style={{marginTop: '-5px', marginRight: '4px', color: '#198754'}}/>Location</Typography>
-						<Typography>{tournament?.location}</Typography>
-					</div>
-					<Divider color={"grey"} />
-					{!isPairingsType ? (
-						<div className="d-flex justify-content-between mt-2">
-							<Typography><GroupIcon fontSize="small" style={{marginTop: '-5px', marginRight: '4px', color: '#198754'}}/>Registered Players</Typography>
-							<Typography>{tournamentPlayers.length} players</Typography>
+					<div className="d-flex justify-content-around">
+						<div className="p-2">
+							<Typography variant="subtitle2" className="text-light-success">Name</Typography>
+							<Typography>{tournament?.name}</Typography>
 						</div>
-					):(
-						<div className="d-flex justify-content-between mt-2">
-							<Typography><CheckCircleIcon fontSize="small" style={{marginTop: '-5px', marginRight: '3px', color: '#198754'}}/>Completed Games</Typography>
-							<Typography>{tournamentRoundGames?.completedGames} / {tournamentRoundGames?.totalGames}</Typography>
+						<Divider orientation="vertical" flexItem color={"grey"}/>
+						<div className="p-2">
+							<Typography variant="subtitle2" className="text-light-success">Location</Typography>
+							<Typography>{tournament?.location}</Typography>
 						</div>
-					)}
+						<Divider orientation="vertical" flexItem color={"grey"}/>
+						{!isPairingsType ? (
+							<div className="p-2">
+								<Typography variant="subtitle2" className="text-light-success" style={{ whiteSpace: 'nowrap' }}>Registered Players</Typography>
+								<Typography>{tournamentPlayers.length} players</Typography>
+							</div>
+						):(
+							<div className="p-2">
+								<Typography variant="subtitle2" className="text-light-success" style={{ whiteSpace: 'nowrap' }}>Completed Games</Typography>
+								<Typography>{tournamentRoundGames?.completedGames} / {tournamentRoundGames?.totalGames}</Typography>
+							</div>
+						)}
+					</div>
 				</CardContent>
 			</div>
 			<Divider color={"#2f2f2f"} />
