@@ -20,6 +20,7 @@ import {getDownloadURL, getStorage, ref} from "firebase/storage";
 import {firebaseApp} from "../config/firebase";
 import ClubImage from '../assets/images/default_chess_club.jpg';
 import {getPostTime} from "../utils/generalTools";
+import {useApp} from "../components/context";
 
 const componentsProps={
 	tooltip: {
@@ -44,6 +45,7 @@ const componentsProps={
 };
 
 const TournamentPost = ({post, userId, title,  isPairingsType,  goToLink, goToLabel}) => {
+	const { theme } = useApp();
 	const storage = getStorage(firebaseApp);
 	const [likes, setLikes] = useState([]);
 	const [comments, setComments] = useState([]);
@@ -139,7 +141,7 @@ const TournamentPost = ({post, userId, title,  isPairingsType,  goToLink, goToLa
 				</Typography>
 			</CardContent>
 			<Divider color={"#2f2f2f"} />
-			<div className="" style={{backgroundColor: '#2f2f2f'}}>
+			<div className="" style={{ backgroundColor: theme === 'dark' ? '#2f2f2f' : 'white' }}>
 				<CardContent style={{paddingLeft: '50px', paddingRight: '50px'}}>
 					<div className="d-flex justify-content-between mb-2">
 						<Typography><EventNoteIcon fontSize="small" style={{marginTop: '-5px', color: '#198754'}}/> Name</Typography>

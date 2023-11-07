@@ -14,6 +14,7 @@ import { getSyncPostsLikes, getSyncPostChat, getSyncUserProfilePicture} from "..
 import {getDownloadURL, getStorage, ref} from "firebase/storage";
 import {firebaseApp} from "../config/firebase";
 import {getPostTime} from "../utils/generalTools";
+import {useApp} from "../components/context";
 
 const componentsProps={
 	tooltip: {
@@ -38,7 +39,7 @@ const componentsProps={
 };
 
 const UserPost = ({post, userId}) => {
-
+	const { theme } = useApp();
 	const storage = getStorage(firebaseApp);
 	const [likes, setLikes] = useState([]);
 	const [comments, setComments] = useState([]);
@@ -139,14 +140,14 @@ const UserPost = ({post, userId}) => {
 			}
 			<Divider color={"#2f2f2f"} />
 			{image &&
-				<div className="d-flex justify-content-center" style={{backgroundColor: '#2f2f2f'}}>
-					<CardMedia
+			<div className="d-flex justify-content-center" style={{ backgroundColor: theme === 'dark' ? '#2f2f2f' : 'white' }}>
+			<CardMedia
 						component="img"
 						alt="Post Image"
 						image={image}
 						title="Post Image"
 						style={{
-							maxHeight: '600px',
+							maxHeight: '700px',
 							width: 'auto'
 						}}
 					/>
