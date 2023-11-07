@@ -519,3 +519,27 @@ export function getSyncIsManager(clubId, userId, setData){
 		}
 	});
 }
+
+export function geSyncCompletedRounds(clubId, tournamentId, setData) {
+	const LOCATION_TOURNAMENT = `${TOURNAMENTS}/${clubId}/${tournamentId}`;
+	const tournamentData = query(ref(getDatabase(firebaseApp), LOCATION_TOURNAMENT));
+
+	onValue(tournamentData, (snapshot) => {
+		const data = snapshot.val();
+		if(data){
+			let aux = [];
+			for (let i = 1; i <= data.totalRounds; i++){
+				const LOCATION_ROUND_GAMES = `${TOURNAMENT_ROUNDS}/${clubId}/${tournamentId}/${i}/${GAMES}`;
+				const roundData = query(ref(getDatabase(firebaseApp), LOCATION_ROUND_GAMES));
+
+				onValue(roundData, (snapshot) => {
+					const data = snapshot.val();
+					if(data){
+						aux.push(data);
+					}
+				});
+			}
+			setData(aux);
+		}
+	});
+}

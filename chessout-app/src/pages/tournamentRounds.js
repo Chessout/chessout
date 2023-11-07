@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
 import { Link, useParams } from 'react-router-dom';
 import {
-	getTournament,
+	getSyncTournament,
 	getTournamentRoundGamesDecoded,
 	getTournamentRoundGames,
-	getSyncIsManager
+	getSyncIsManager,
+	geSyncCompletedRounds
 } from "../utils/firebaseTools";
 import {Col, Container, Row} from "react-bootstrap";
 import { Avatar, Typography, ButtonGroup, Button as MuiButton } from "@mui/material";
@@ -18,47 +19,19 @@ function TournamentRounds(props) {
 	const { clubId, tournamentId, activeRoundId } = useParams();
 	const { firebaseUser, theme, isMobile } = useApp();
 	const [tournament, setTournament] = useState(null);
-	const [rounds, setRounds] = useState(null);
+	const [completedRounds, setCompletedRounds] = useState([]);
 
 	const [isManager, setIsManager] = useState(false);
 	useEffect(()=>{
+		getSyncTournament(clubId, tournamentId, setTournament);
 		getSyncIsManager(clubId, firebaseUser?.uid, setIsManager);
 	}, [firebaseUser]);
 
-	//Get tournament
-	const getMyTournament = async () => {
-		const myTournamentData = await getTournament(clubId, tournamentId);
-
-		const roundsInfo = [];
-		for (let i = 1; i <= myTournamentData?.totalRounds; i++) {
-			const tournamentRoundGamesDecodedData = await getTournamentRoundGamesDecoded(clubId, tournamentId, i);
-			if (tournamentRoundGamesDecodedData) {
-				const tournamentRoundGames = await getTournamentRoundGames(clubId, tournamentId, i);
-
-				const roundsGamesResults = [];
-				for (const result of tournamentRoundGames) {
-					if (result) {
-						roundsGamesResults.push({
-							result: result.result,
-						})
-					}
-				}
-
-				roundsInfo.push({
-					round: i,
-					results: roundsGamesResults
-				})
-			}
-		}
-
-		setTournament(myTournamentData);
-		setRounds(roundsInfo);
-	};
-
-	useEffect(() => {
-		if (firebaseUser) {
-			getMyTournament();
-		}
+	useEffect(()=>{
+		const interval = window.setInterval(() => {
+			geSyncCompletedRounds(clubId, tournamentId, setCompletedRounds)
+		}, 1000);
+		return () => window.clearInterval(interval);
 	}, [firebaseUser]);
 
 	const [index, setIndex] = useState(parseInt(activeRoundId, 10));
@@ -139,11 +112,11 @@ function TournamentRounds(props) {
 					<div className="p-3 b-r-sm mt-4" style={{backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))"}}>
 						{isManager && <Typography className="font-size-xs mb-4" style={{textAlign: 'right'}}>*To change the result, click on it and simple choose the right option</Typography>}
 						<Typography variant="h6" className="text-center">Tournament Rounds</Typography>
-						{rounds && rounds.length > 0 ? (
+						{completedRounds && completedRounds.length > 0 ? (
 							<>
 								<div className="text-center">
 									<ButtonGroup>
-										{rounds.map((round, i) => (
+										{completedRounds.map((round, i) => (
 											<MuiButton
 												onClick={() => setIndex(i)}
 												variant="text"
@@ -162,7 +135,7 @@ function TournamentRounds(props) {
 									</ButtonGroup>
 								</div>
 								<Carousel activeIndex={index} onSelect={handleSelect} interval={null} wrap={false}>
-									{rounds.map((round, index) => (
+									{completedRounds.map((round, index) => (
 										<Carousel.Item key={index}>
 											<TournamentRound clubId={clubId} tournamentId={tournamentId} roundId={index+1} isManager={isManager}/>
 										</Carousel.Item>
