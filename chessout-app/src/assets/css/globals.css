@@ -2244,7 +2244,7 @@ h6 {
     background-color: #ce93d8;
 }
 .text-light-success{
-    color: #66bb6a;
+    color: #66bb6a !important;
 }
 .bg-light-success{
     background-color: #66bb6a;

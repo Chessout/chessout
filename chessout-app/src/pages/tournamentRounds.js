@@ -137,6 +137,7 @@ function TournamentRounds(props) {
 					</div>
 
 					<div className="p-3 b-r-sm mt-4" style={{backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))"}}>
+						{isManager && <Typography className="font-size-xs mb-4" style={{textAlign: 'right'}}>*To change the result, click on it and simple choose the right option</Typography>}
 						<Typography variant="h6" className="text-center">Tournament Rounds</Typography>
 						{rounds && rounds.length > 0 ? (
 							<>
