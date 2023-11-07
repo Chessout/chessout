@@ -105,27 +105,27 @@ const UserPost = ({post, userId}) => {
 				title={
 					<React.Fragment>
 						<span>{post?.userName}</span>
-						<div className="float-end">
-							<IconButton
-								aria-controls="post-menu"
-								aria-haspopup="true"
-								onClick={handleMenuOpen}
-							>
-								<MoreVertIcon />
-							</IconButton>
-							<Menu
-								id="post-menu"
-								anchorEl={anchorEl}
-								keepMounted
-								open={Boolean(anchorEl)}
-								onClose={handleMenuClose}
-								style={{
-									transform: 'translateX(-4.1%)',
-								}}
-							>
-								<MenuItem onClick={handleMenuClose}>Delete post</MenuItem>
-							</Menu>
-						</div>
+						{/*<div className="float-end">*/}
+						{/*	<IconButton*/}
+						{/*		aria-controls="post-menu"*/}
+						{/*		aria-haspopup="true"*/}
+						{/*		onClick={handleMenuOpen}*/}
+						{/*	>*/}
+						{/*		<MoreVertIcon />*/}
+						{/*	</IconButton>*/}
+						{/*	<Menu*/}
+						{/*		id="post-menu"*/}
+						{/*		anchorEl={anchorEl}*/}
+						{/*		keepMounted*/}
+						{/*		open={Boolean(anchorEl)}*/}
+						{/*		onClose={handleMenuClose}*/}
+						{/*		style={{*/}
+						{/*			transform: 'translateX(-4.1%)',*/}
+						{/*		}}*/}
+						{/*	>*/}
+						{/*		<MenuItem onClick={handleMenuClose}>Delete post</MenuItem>*/}
+						{/*	</Menu>*/}
+						{/*</div>*/}
 					</React.Fragment>
 				}
 				subheader={getPostTime(post?.dateCreated.timestamp)}

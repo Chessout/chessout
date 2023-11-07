@@ -123,7 +123,7 @@ const TournamentPost = ({post, userId, title,  isPairingsType,  goToLink, goToLa
 									transform: 'translateX(-4.1%)',
 								}}
 							>
-								<MenuItem onClick={handleMenuClose}>Delete post</MenuItem>
+								{/*<MenuItem onClick={handleMenuClose}>Delete post</MenuItem>*/}
 								<MenuItem component={Link} to={goToLink}>
 									{goToLabel}
 								</MenuItem>
@@ -134,7 +134,7 @@ const TournamentPost = ({post, userId, title,  isPairingsType,  goToLink, goToLa
 				subheader={getPostTime(post?.dateCreated.timestamp)}
 			/>
 			<CardContent style={{marginTop: '-15px'}}>
-				<Typography variant="body1" color="textPrimary">
+				<Typography variant="body1" color="textPrimary" component={Link} to={goToLink}>
 					{title}
 				</Typography>
 			</CardContent>
