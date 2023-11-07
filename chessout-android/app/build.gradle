@@ -8,14 +8,14 @@ apply plugin: "androidx.navigation.safeargs"
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     buildToolsVersion "30.0.2"
     defaultConfig {
         applicationId "eu.chessout.v2"
         minSdkVersion 19
-        targetSdkVersion 32
-        versionCode 42 // build version that you see in google pay console
-        versionName "1.42" // specific unique build still relevant for google play console
+        targetSdkVersion 33
+        versionCode 44 // build version that you see in google pay console
+        versionName "1.44" // specific unique build still relevant for google play console
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-    implementation 'eu.chessout:shared:0.0.01'
+    implementation 'eu.chessout:shared:0.0.03'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'eu.chesdata:chess-pairing:1.5-SNAPSHOT'

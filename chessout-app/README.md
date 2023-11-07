@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -29,42 +29,79 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+# my notes
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+# deploy next
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```yaml
+# next js app.yaml file
+env: standard
+runtime: nodejs18
+service: web-app
+handlers:
+  - url: /.*
+    secure: always
+    script: auto
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## deploy react
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```yaml
+env: standard
+runtime: nodejs18
+service: web-app
+handlers:
+  # Serve all static files with url ending with a file extension
+  - url: /(.*\..+)$
+    static_files: build/\1
+    upload: build/(.*\..+)$
+  # Catch all handler to index.html
+  - url: /.*
+    static_files: build/index.html
+    upload: build/index.html
+```
 
-## Learn More
+### deploy workflow
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+# show current gcloud project
+gcloud config get-value project
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# set project
+gcloud config set project chess-out-v2
 
-### Code Splitting
+# clone in temp needed projects
+cd temp
+rm -rf chessout-security
+rm -rf chessout
+git clone git@github.com:Chessout/chessout.git
+git clone git@github.com:Chessout/chessout-security.git
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+# install security keys
+cd chessout-security
+. load-security-commands.sh
+initChessoutSecurity
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+# build
+cd ../chessout/chessout-app
+rm -rf ./build
+npm install
+npm run build
 
-### Making a Progressive Web App
+# remove all but build folder and app.yaml file
+rm -rf future-next
+rm -rf node_modules
+rm package-lock.json
+rm README.md
+rm jsconfig.json
+rm package.json
+rm -rf public
+rm -rf src
+rm .gcloudignore
+rm .gitignore
+rm .env
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# deploy
+gcloud app deploy
+```
