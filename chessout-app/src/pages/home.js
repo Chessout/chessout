@@ -48,7 +48,7 @@ function Home(props) {
 	return (
 		<Container className="mt-2 mb-5">
 			<Row>
-				<Col xs={12} lg={{ offset: 3, span: 6 }}>
+				<Col xs={12} sm={12} md={12} lg={{ offset: 1, span: 10 }}>
 					{myPostsArray && myPostsArray.length > 0? (
 						<Row>
 							{myPostsArray.map((post) => (
