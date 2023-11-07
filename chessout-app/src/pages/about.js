@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button} from  "@mui/material";
 import { Container, Row, Col, Image } from "react-bootstrap";
+import {openInNewTab} from "../utils/generalTools";
 
 import {useApp} from "../components/context";
 import Horse from '../assets/images/horse.png';
@@ -9,6 +10,7 @@ import Wireframe2 from '../assets/images/wireframe2.png';
 import Wireframe3 from '../assets/images/wireframe3.png';
 import Wireframe4 from '../assets/images/wireframe4.png';
 import Wireframe5 from '../assets/images/wireframe5.png';
+import GooglePlay from '../assets/images/google_play.png';
 
 function About() {
 	const { theme } = useApp();
@@ -108,6 +110,7 @@ function About() {
 							<p className="h5 mt-4 text-justified">
 								Stay tuned for the exciting future updates as Chessout evolves to empower event organizers and create a truly immersive and convenient chess ecosystem.
 							</p>
+							<Image className="mt-4" style={{ cursor: 'pointer' }} src={GooglePlay} alt="Image" fluid width={200} onClick={() => openInNewTab("https://play.google.com/store/apps/details?id=eu.chessout.v2&pcampaignid=web_share")}/>
 						</Col>
 					</Row>
 				</Col>
