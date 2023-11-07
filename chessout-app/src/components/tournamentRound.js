@@ -79,7 +79,7 @@ function roundResultTooltips(result, whitePlayerName, blackPlayerName){
 }
 
 
-export const TournamentRound = ({clubId, tournamentId, roundId}) => {
+export const TournamentRound = ({clubId, tournamentId, roundId, isManager}) => {
 	const { firebaseUser, theme, isMobile } = useApp();
 	const storage = getStorage(firebaseApp);
 
@@ -108,7 +108,6 @@ export const TournamentRound = ({clubId, tournamentId, roundId}) => {
 		getSyncTournamentRoundGames(clubId, tournamentId, roundId, setRound);
 		getSyncTournamentPlayerImages(clubId,tournamentId, setPlayerImages);
 	}, []);
-	//console.log(JSON.stringify(playerImages, null, 2));
 
 	return (
 		<>

@@ -28,6 +28,7 @@ const GAMES = 'games';
 const STANDINGS = "standings";
 const CATEGORY_DEFAULT = "defaultCategory";
 const CLUB_PLAYERS = "clubPlayers";
+const CLUB_MANAGERS = "clubManagers";
 
 export async function readMyDefaultClub(userId) {
 	const LOCATION_DEFAULT_CLUB = `${USER_SETTINGS}/${userId}/${DEFAULT_CLUB}`;
@@ -505,3 +506,16 @@ export async function getSyncTournamentPlayerImages(clubId, tournamentId, setDat
 	});
 }
 
+export function getSyncIsManager(clubId, userId, setData){
+	const LOCATION_CLUB_MANAGERS = `${CLUB_MANAGERS}/${clubId}/${userId}`;
+	const managersData = query(ref(getDatabase(firebaseApp), LOCATION_CLUB_MANAGERS));
+
+	onValue(managersData, (snapshot) => {
+		const data = snapshot.val();
+		if(data){
+			setData(true);
+		}else {
+			setData(false);
+		}
+	});
+}

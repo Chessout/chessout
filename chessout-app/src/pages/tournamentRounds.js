@@ -4,7 +4,7 @@ import {
 	getTournament,
 	getTournamentRoundGamesDecoded,
 	getTournamentRoundGames,
-	getSyncTournament,
+	getSyncIsManager
 } from "../utils/firebaseTools";
 import {Col, Container, Row} from "react-bootstrap";
 import { Avatar, Typography, ButtonGroup, Button as MuiButton } from "@mui/material";
@@ -20,10 +20,10 @@ function TournamentRounds(props) {
 	const [tournament, setTournament] = useState(null);
 	const [rounds, setRounds] = useState(null);
 
-	const [tournamentS, setTournamentS] = useState(null);
+	const [isManager, setIsManager] = useState(false);
 	useEffect(()=>{
-		getSyncTournament(clubId, tournamentId, setTournamentS);
-	}, []);
+		getSyncIsManager(clubId, firebaseUser?.uid, setIsManager);
+	}, [firebaseUser]);
 
 	//Get tournament
 	const getMyTournament = async () => {
@@ -163,7 +163,7 @@ function TournamentRounds(props) {
 								<Carousel activeIndex={index} onSelect={handleSelect} interval={null} wrap={false}>
 									{rounds.map((round, index) => (
 										<Carousel.Item key={index}>
-											<TournamentRound clubId={clubId} tournamentId={tournamentId} roundId={index+1}/>
+											<TournamentRound clubId={clubId} tournamentId={tournamentId} roundId={index+1} isManager={isManager}/>
 										</Carousel.Item>
 									))}
 								</Carousel>
