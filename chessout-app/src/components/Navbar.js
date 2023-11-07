@@ -124,7 +124,7 @@ function CustomNavbar(props) {
           >
             <MenuIcon />
           </Button>
-          <Link to={`/home/${firebaseUser?.uid}`}>
+          <Link to={firebaseUser ? `/home/${firebaseUser?.uid}` : '/about-us'}>
             <img className="navbar-logo" src={ImageLogo} alt="Logo" />
           </Link>
           <Typography

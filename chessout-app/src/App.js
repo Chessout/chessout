@@ -57,7 +57,7 @@ function App() {
                   firebaseUser ? (
                     <Navigate to={`/home/${firebaseUser.uid}`} />
                   ) : (
-                    <Navigate to="/home/undefined" />
+                    <Navigate to="/about-us" />
                   )
                 ) : null
               }
