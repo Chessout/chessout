@@ -147,13 +147,14 @@ function TournamentRounds(props) {
 												onClick={() => setIndex(i)}
 												variant="text"
 												className="ms-1 me-1 text-capitalize"
+												key={i}
 												style={{
 												borderRadius: 0,
 												borderBottom: i === index ? '1px solid white' : 'none',
 												backgroundColor: 'transparent',
 												color: 'white'
-											}}
-												>
+												}}
+											>
 												<span className="font-size-sm">Round {i+1}</span>
 											</MuiButton>
 										))}
