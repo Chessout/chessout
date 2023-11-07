@@ -112,8 +112,7 @@ export const TournamentRound = ({clubId, tournamentId, roundId}) => {
 
 	return (
 		<>
-			<Typography variant="subtitle2" className="text-center mt-2">Round {roundId}</Typography>
-			<Typography variant="subtitle2" className="text-center text-light-success">Round progress {decodeGames(round).completedGames} / {decodeGames(round).totalGames}</Typography>
+			<Typography variant="subtitle2" className="text-center text-light-success mt-2">Round progress {decodeGames(round).completedGames} / {decodeGames(round).totalGames}</Typography>
 			<div className="mt-5" style={{marginBottom: '100px'}}>
 				<TableContainer className="custom-table-container">
 					<Table aria-label="simple table" className="custom-table">

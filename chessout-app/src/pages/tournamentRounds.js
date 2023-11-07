@@ -139,16 +139,37 @@ function TournamentRounds(props) {
 					<div className="p-3 b-r-sm mt-4" style={{backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))"}}>
 						<Typography variant="h6" className="text-center">Tournament Rounds</Typography>
 						{rounds && rounds.length > 0 ? (
-							<Carousel activeIndex={index} onSelect={handleSelect} interval={null} wrap={false}>
-								{rounds.map((round, index) => (
-									<Carousel.Item key={index}>
-										<TournamentRound clubId={clubId} tournamentId={tournamentId} roundId={index+1}/>
-									</Carousel.Item>
-								))}
-							</Carousel>
-						):(
-							<div className="text-center align-content-center b-r-sm mt-5" style={{backgroundColor: "#2f2f2f", paddingTop: '20px', paddingBottom: '5px'}}><p>Round not started.</p></div>
-						)}
+							<>
+								<div className="text-center">
+									<ButtonGroup>
+										{rounds.map((round, i) => (
+											<MuiButton
+												onClick={() => setIndex(i)}
+												variant="text"
+												className="ms-1 me-1 text-capitalize"
+												style={{
+												borderRadius: 0,
+												borderBottom: i === index ? '1px solid white' : 'none',
+												backgroundColor: 'transparent',
+												color: 'white'
+											}}
+												>
+												<span className="font-size-sm">Round {i+1}</span>
+											</MuiButton>
+										))}
+									</ButtonGroup>
+								</div>
+								<Carousel activeIndex={index} onSelect={handleSelect} interval={null} wrap={false}>
+									{rounds.map((round, index) => (
+										<Carousel.Item key={index}>
+											<TournamentRound clubId={clubId} tournamentId={tournamentId} roundId={index+1}/>
+										</Carousel.Item>
+									))}
+								</Carousel>
+							</>
+							):(
+								<div className="text-center align-content-center b-r-sm mt-5" style={{backgroundColor: "#2f2f2f", paddingTop: '20px', paddingBottom: '5px'}}><p>Round not started.</p></div>
+							)}
 					</div>
 				</Col>
 			</Row>
