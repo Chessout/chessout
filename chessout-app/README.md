@@ -64,6 +64,12 @@ handlers:
 ### deploy workflow
 
 ```bash
+# show current user
+gcloud config list account --format "value(core.account)"
+
+# authenticate if not correct user
+gcloud auth login
+
 # show current gcloud project
 gcloud config get-value project
 
